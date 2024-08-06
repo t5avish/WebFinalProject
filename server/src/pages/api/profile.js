@@ -36,6 +36,11 @@ export default async function handler(req, res) {
       const heightInMeters = height / 100;
       const bmi = (weight / (heightInMeters ** 2)).toFixed(2);
 
+      // Fetch user's challenges
+      const userChallenges = await db.collection('users_challenges').find({ user_id: new ObjectId(decoded.userId) }).toArray();
+      const challengeIds = userChallenges.map(uc => new ObjectId(uc.challenge_id));
+      const challenges = await db.collection('challenges').find({ _id: { $in: challengeIds } }).toArray();
+
       res.status(200).json({
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
@@ -43,7 +48,8 @@ export default async function handler(req, res) {
         height: height,
         weight: weight,
         bmi: bmi,
-        avatar: user.avatar
+        avatar: user.avatar,
+        challenges: challenges
       });
     } catch (error) {
       console.error('Profile fetch error:', error);
