@@ -42,6 +42,7 @@ export default async function handler(req, res) {
       const challenges = await db.collection('challenges').find({ _id: { $in: challengeIds } }).toArray();
 
       res.status(200).json({
+        id: user._id,
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
         age: user.age,
@@ -49,7 +50,7 @@ export default async function handler(req, res) {
         weight: weight,
         bmi: bmi,
         avatar: user.avatar,
-        challenges: challenges
+        challenges: challenges,
       });
     } catch (error) {
       console.error('Profile fetch error:', error);
