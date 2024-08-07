@@ -24,17 +24,49 @@ export default async function handler(req, res) {
       }
 
       const date = new Date().toISOString();
-      const result = await db.collection('posts').insertOne({ user, text, date });
+      const result = await db.collection('posts').insertOne({ user, text, date, likes: [] });
 
-      const newPost = result.insertedId ? { _id: result.insertedId, user, text, date } : null;
+      const newPost = result.insertedId ? { _id: result.insertedId, user, text, date, likes: [] } : null;
 
       res.status(201).json(newPost);
     } catch (error) {
       console.error('Error adding new post:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
+  } else if (req.method === 'PUT') {
+    try {
+      const { postId, userId } = req.body;
+
+      if (!postId || !userId) {
+        return res.status(400).json({ message: 'Post ID and User ID are required' });
+      }
+
+      const post = await db.collection('posts').findOne({ _id: new ObjectId(postId) });
+
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+
+      if (post.likes.includes(userId)) {
+        return res.status(400).json({ message: 'User has already liked this post' });
+      }
+
+      const update = { $push: { likes: userId } };
+      const result = await db.collection('posts').updateOne({ _id: new ObjectId(postId) }, update);
+
+      if (result.modifiedCount === 0) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+
+      const updatedPost = await db.collection('posts').findOne({ _id: new ObjectId(postId) });
+
+      res.status(200).json(updatedPost);
+    } catch (error) {
+      console.error('Error liking post:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
+    res.setHeader('Allow', ['GET', 'POST', 'PUT']);
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
