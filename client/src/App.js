@@ -3,6 +3,7 @@ import SignUpForm from './components/SignUpForm';
 import ChallengesPage from './components/ChallengesPage';
 import LoginForm from './components/LoginForm';
 import ProfilePage from './components/ProfilePage';
+import ChatPage from './components/ChatPage'; // Import the ChatPage component
 import './App.css'; // Ensure you import the Tailwind CSS here
 
 const App = () => {
@@ -10,10 +11,18 @@ const App = () => {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [currentPage, setCurrentPage] = useState('home');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
+            // Fetch user data from your backend using the token
+            // For this example, we'll use hardcoded user data
+            const userData = {
+                name: 'John Doe',
+                profilePicture: 'https://via.placeholder.com/50'
+            };
+            setUser(userData);
             setIsLoggedIn(true);
         }
     }, []);
@@ -23,7 +32,6 @@ const App = () => {
 
     const openLoginForm = () => setShowLoginForm(true);
     const closeLoginForm = () => setShowLoginForm(false);
-
 
     const goToChallenges = () => {
         if (isLoggedIn) {
@@ -36,8 +44,21 @@ const App = () => {
             setCurrentPage('profile');
         }
     };
+    const goToChat = () => {
+        if (isLoggedIn) {
+            setCurrentPage('chat');
+        } else {
+            alert('You must be logged in to access the chat page.');
+        }
+    };
 
     const handleLogin = () => {
+        // Fetch user data and set it to state
+        const userData = {
+            name: 'John Doe',
+            profilePicture: 'https://via.placeholder.com/50'
+        };
+        setUser(userData);
         setIsLoggedIn(true);
         closeLoginForm();
     };
@@ -45,6 +66,7 @@ const App = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
+        setUser(null);
         goToHome();
     };
 
@@ -58,7 +80,7 @@ const App = () => {
                         <a href="#" onClick={goToHome} className="text-gray-300 hover:text-white">Home</a>
                         <a href="#" onClick={goToChallenges} className="text-gray-300 hover:text-white">Challenges</a>
                         <a href="#" onClick={goToProfile} className="text-gray-300 hover:text-white">Profile</a>
-                        <a href="#" className="text-gray-300 hover:text-white">Chat</a>
+                        <a href="#" onClick={goToChat} className="text-gray-300 hover:text-white">Chat</a>
                         {isLoggedIn ? (
                             <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
                         ) : (
@@ -132,6 +154,7 @@ const App = () => {
 
             {currentPage === 'challenges' && <ChallengesPage goBack={goToHome} />}
             {currentPage === 'profile' && isLoggedIn && <ProfilePage />} {/* Conditionally render ProfilePage */}
+            {currentPage === 'chat' && isLoggedIn && <ChatPage goBack={goToHome} user={user} />} {/* Conditionally render ChatPage */}
 
             {/* SignUpForm Modal */}
             {showSignUpForm && <SignUpForm closeModal={closeSignUpForm} />}
