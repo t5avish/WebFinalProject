@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { URL } from '../settings';
 
-const ChatPage = () => {
+const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [text, setText] = useState('');
@@ -11,7 +11,7 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(URL + 'chat', {
+        const response = await fetch(URL + 'posts', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const ChatPage = () => {
     }
 
     try {
-      const response = await fetch(URL + 'chat', {
+      const response = await fetch(URL + 'posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const ChatPage = () => {
 
   const handleLikePost = async (postId) => {
     try {
-      const response = await fetch(URL + 'chat', {
+      const response = await fetch(URL + 'posts', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -132,8 +132,8 @@ const ChatPage = () => {
   };
 
   return (
-    <section id="chat" className="container mx-auto mt-8 p-4">
-      <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Chat</h2>
+    <section id="posts" className="container mx-auto mt-8 p-4">
+      <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Posts</h2>
       <div className="text-center mb-8">
         <button onClick={handleAddPostClick} className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Add New Post</button>
       </div>
@@ -187,4 +187,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default Posts;

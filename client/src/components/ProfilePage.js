@@ -118,8 +118,7 @@ const ProfilePage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const avatarSrc = selectedAvatar ? require(`../assets/${selectedAvatar}`) : require('../assets/profile-pic.png');
-
+  const avatarSrc = require(`../assets/${selectedAvatar}`) 
   const sortedDays = challengeDetails?.days
     ? Object.entries(challengeDetails.days).sort(([keyA], [keyB]) => new Date(keyA) - new Date(keyB))
     : [];

@@ -1,1 +1,1 @@
-export const URL = "https://fitness-rho-nine.vercel.app"
+export const URL = "https://fitness-rho-nine.vercel.app" // SERVER VERCEL

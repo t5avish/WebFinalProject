@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     try {
       const db = await connectToDatabase();
       const usersCollection = db.collection('users');
-      let { firstName, lastName, email, password, age, weight, height, gender } = req.body;
+      let { firstName, lastName, email, password, age, weight, height, gender} = req.body;
 
       // Convert email to lowercase for case-insensitive comparison
       email = email.toLowerCase();
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         res.status(409).json({ message: 'Email already exists' });
         return;
       }
-      const result = await usersCollection.insertOne({ firstName, lastName, email, password, age, weight, height, gender });
+      const result = await usersCollection.insertOne({ firstName, lastName, email, password, age, weight, height, gender , avatar:'profile-pic.png'});
       res.status(200).json({ userId: result.insertedId });
     } catch (error) {
       console.error('Error during user creation:', error);
