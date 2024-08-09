@@ -6,7 +6,7 @@ const ChallengesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [numDays, setNumDays] = useState('');
-  const [measurement, setMeasurement] = useState('time');
+  const [measurement, setMeasurement] = useState('seconds');
   const [goal, setGoal] = useState('');
   const [description, setDescription] = useState('');
 
@@ -50,7 +50,7 @@ const ChallengesPage = () => {
         setChallenges([...challenges, newChallenge]);
         setTitle('');
         setNumDays('');
-        setMeasurement('time');
+        setMeasurement('seconds');
         setGoal('');
         setDescription('');
         setShowForm(false);
@@ -93,7 +93,7 @@ const ChallengesPage = () => {
     setShowForm(false);
     setTitle('');
     setNumDays('');
-    setMeasurement('time');
+    setMeasurement('seconds');
     setGoal('');
     setDescription('');
   };
@@ -164,8 +164,10 @@ const ChallengesPage = () => {
                   className="border p-2 w-full rounded"
                   required
                 >
-                  <option value="time">Time</option>
-                  <option value="length">Length</option>
+                  <option value="seconds">Time (seconds)</option>
+                  <option value="minutes">Time (minutes)</option>
+                  <option value="meters">length (meters)</option>
+                  <option value="km">Length (km) </option>
                 </select>
               </div>
               <div className="mb-4">

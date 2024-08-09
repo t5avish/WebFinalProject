@@ -12,6 +12,8 @@ const ProfilePage = () => {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [challengeDetails, setChallengeDetails] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateValue, setSelectedDateValue] = useState('');
+  const [isNumberInputOpen, setIsNumberInputOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -98,21 +100,58 @@ const ProfilePage = () => {
       
       const data = await response.json();
       setChallengeDetails(data);
+      setSelectedDate(null); // Reset selectedDate when new challenge is selected
+      setSelectedDateValue(data.days[null] || ''); // Reset selectedDateValue when new challenge is selected
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const handleButtonClick = (value) => {
-    setSelectedDate(value);
+  const handleButtonClick = (dateKey) => {
+    setSelectedDate(dateKey);
+    const value = challengeDetails?.days[dateKey] ?? ''; // Default to empty string if not set
+    setSelectedDateValue(value); // Set value from the challenge details
+    setIsNumberInputOpen(true);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+  const handleSave = async () => {
+    if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) < 0) {
+      window.alert('Value must be a number greater than or equal to 0');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Not authenticated');
+      return;
+    }
+
+    try {
+      const response = await fetch(URL + 'get-challenge-details', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          challengeId: selectedChallenge._id,
+          date: selectedDate,
+          value: Number(selectedDateValue) // Ensure value is sent as a number
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update value');
+      }
+
+      const data = await response.json();
+      console.log('Update success:', data);
+      setIsNumberInputOpen(false);
+      await handleViewChallenge(selectedChallenge); // Optionally refresh challenge details
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -149,7 +188,6 @@ const ProfilePage = () => {
             </div>
             {isAvatarSelectorOpen && <AvatarSelector onSelect={handleAvatarSelect} />}
             
-            {/* User's challenges section */}
             <div className="mt-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-6">Joined Challenges</h3>
               {user.challenges && user.challenges.length > 0 ? (
@@ -175,7 +213,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Conditionally render the challenge view form */}
           <div className="container mx-auto mt-8 p-4">
             {challengeDetails && (
               <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
@@ -188,43 +225,53 @@ const ProfilePage = () => {
                     X
                   </button>
                   <h1 className="text-2xl font-bold mb-4 text-center">{selectedChallenge.title}</h1>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center mb-6">
                     <div className="flex items-center">
                       <h2 className="font-bold mr-2">Daily goal:</h2>
-                      <h3>{selectedChallenge.goal} {selectedChallenge.measurement === "time" ? "seconds" : "meters"}</h3>
+                      <h3>{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                     </div>
                   </div>
-                  <div>
-                    <p className="font-bold mb-2">Days:</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-                      {sortedDays.map(([key, value], index) => (
+                  <div className="mt-6">
+                    {sortedDays.reduce((rows, [key, value], index) => {
+                      if (index % 5 === 0) rows.push([]);
+                      rows[rows.length - 1].push(
                         <button
-                          key={index}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600"
-                          onClick={() => handleButtonClick(value)}
+                          key={key}
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2 mr-2"
+                          onClick={() => handleButtonClick(key)}
                         >
-                          {formatDate(key)}
+                          {key}
                         </button>
-                      ))}
-                    </div>
-                    {selectedDate && (
-                      <div className="p-4 border border-gray-300 rounded-md bg-gray-50">
-                        <p className="font-bold mb-2">Details:</p>
-                        <textarea
-                          value={selectedDate}
-                          readOnly
-                          className="w-full h-32 border border-gray-300 rounded-md p-2"
-                        />
-                      </div>
-                    )}
+                      );
+                      return rows;
+                    }, []).map((row, i) => (
+                      <div key={i} className="flex flex-wrap justify-center mb-2">{row}</div>
+                    ))}
                   </div>
+                  {isNumberInputOpen && (
+                    <div className="flex items-center justify-center mt-4">
+                      <input
+                        type="number"
+                        value={selectedDateValue}
+                        onChange={(e) => setSelectedDateValue(e.target.value)}
+                        className="border border-gray-300 p-2 rounded-md mr-2 text-center"
+                        style={{ width: '100px' }}
+                      />
+                      <button
+                        onClick={handleSave}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         </>
       ) : (
-        <p>No user data available</p>
+        <p className="text-gray-600">No user data available.</p>
       )}
     </div>
   );
