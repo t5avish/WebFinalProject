@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AvatarSelector from './AvatarSelector';
 import 'tailwindcss/tailwind.css';
 import { URL } from '../settings';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -115,8 +117,8 @@ const ProfilePage = () => {
   };
 
   const handleSave = async () => {
-    if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) < 0) {
-      window.alert('Value must be a number greater than or equal to 0');
+    if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) <= 0) {
+      window.alert('Value must be a number greater than 0');
       return;
     }
 
@@ -157,10 +159,67 @@ const ProfilePage = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const avatarSrc = require(`../assets/${selectedAvatar}`) 
+  const avatarSrc = require(`../assets/${selectedAvatar}`);
   const sortedDays = challengeDetails?.days
     ? Object.entries(challengeDetails.days).sort(([keyA], [keyB]) => new Date(keyA) - new Date(keyB))
     : [];
+
+  const dataForGraph = sortedDays.filter(([key, value]) => value > 0).map(([key, value]) => ({ date: key, value }));
+
+  // Calculate the average of the Y-axis values
+  const total = dataForGraph.reduce((sum, entry) => sum + entry.value, 0);
+  const average = dataForGraph.length > 0 ? (total / dataForGraph.length).toFixed(2) : 0;
+
+  // Prepare data for the Daily Goal line
+  const dailyGoalLine = dataForGraph.map(() => selectedChallenge.goal);
+
+  const graphData = {
+    labels: dataForGraph.map(entry => entry.date),
+    datasets: [
+      {
+        label: `Daily Progress (Avg: ${average})`, // Include the average in the label
+        data: dataForGraph.map(entry => entry.value),
+        fill: false,
+        backgroundColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgba(75, 192, 192, 0.2)',
+      },
+      {
+        label: 'Daily Goal',
+        data: dailyGoalLine,
+        fill: false,
+        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+        borderColor: 'rgb(255, 0, 0)',
+        borderDash: [10, 5], // Optional: Make the line dashed
+      },
+    ],
+  };
+
+  const graphOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Dates',
+        },
+        ticks: {
+          maxRotation: 45, // Rotate labels by 45 degrees
+          autoSkip: true,  // Automatically skip labels to reduce density
+          maxTicksLimit: 7, // Limit to a maximum of 7 labels on the X-axis
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: selectedChallenge ? selectedChallenge.measurement : 'Value', // Dynamic Y-axis title
+        },
+        beginAtZero: true, // Ensure the Y-axis starts at 0
+      },
+    },
+  };
+
+
+
+
 
   return (
     <div className="container mx-auto mt-8 p-4">
@@ -231,6 +290,7 @@ const ProfilePage = () => {
                       <h3>{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                     </div>
                   </div>
+                  {/* Remove the average display in green */}
                   <div className="mt-6">
                     {sortedDays.reduce((rows, [key, value], index) => {
                       if (index % 5 === 0) rows.push([]);
@@ -265,6 +325,11 @@ const ProfilePage = () => {
                       </button>
                     </div>
                   )}
+
+                  {/* Add the graph below the challenge details */}
+                  <div className="mt-8">
+                    <Line data={graphData} options={graphOptions} />
+                  </div>
                 </div>
               </div>
             )}
