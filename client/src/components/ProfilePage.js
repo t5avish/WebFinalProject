@@ -222,7 +222,7 @@ const ProfilePage = () => {
           <h1 className="text-3xl font-bold text-center mb-8">User Profile</h1>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-12">
-              <div className="flex items-center space-x-6">
+              <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
                 <div className="w-24 h-24 rounded-full overflow-hidden cursor-pointer" onClick={() => setIsAvatarSelectorOpen(!isAvatarSelectorOpen)}>
                   <img
                     src={avatarSrc}
