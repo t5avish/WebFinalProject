@@ -12,16 +12,35 @@ const App = () => {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [currentPage, setCurrentPage] = useState('home');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState(null);
-    const [darkMode, setDarkMode] = useState(false); // Add darkMode state
-    const [menuOpen, setMenuOpen] = useState(false); // Add state to handle mobile menu
+    const [user, setUser] = useState(null); // Store user data
+    const [darkMode, setDarkMode] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             setIsLoggedIn(true);
+            fetchUserData(); // Fetch user data when token is present
         }
     }, []);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch('/api/profile', { // Replace with your actual API endpoint
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data);  // Set the user data received from the server
+            } else {
+                console.error('Failed to fetch user data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Failed to fetch user data:', error);
+        }
+    };
 
     const openSignUpForm = () => setShowSignUpForm(true);
     const closeSignUpForm = () => setShowSignUpForm(false);
@@ -32,19 +51,19 @@ const App = () => {
     const goToChallenges = () => {
         if (isLoggedIn) {
             setCurrentPage('challenges');
-            setMenuOpen(false); // Close menu on navigation
+            setMenuOpen(false);
         } else {
             alert('You must be logged in to access the challenges page.');
         }
     };
     const goToHome = () => {
         setCurrentPage('home');
-        setMenuOpen(false); // Close menu on navigation
+        setMenuOpen(false);
     };
     const goToProfile = () => {
         if (isLoggedIn) {
             setCurrentPage('profile');
-            setMenuOpen(false); // Close menu on navigation
+            setMenuOpen(false);
         } else {
             alert('You must be logged in to access the profile page.');
         }
@@ -52,7 +71,7 @@ const App = () => {
     const goToPosts = () => {
         if (isLoggedIn) {
             setCurrentPage('posts');
-            setMenuOpen(false); // Close menu on navigation
+            setMenuOpen(false);
         } else {
             alert('You must be logged in to access the posts page.');
         }
@@ -61,6 +80,7 @@ const App = () => {
     const handleLogin = () => {
         setIsLoggedIn(true);
         closeLoginForm();
+        fetchUserData(); 
     };
 
     const handleLogout = () => {
@@ -68,7 +88,7 @@ const App = () => {
         setIsLoggedIn(false);
         setUser(null);
         goToHome();
-        setMenuOpen(false); // Close menu on logout
+        setMenuOpen(false);
     };
 
     const toggleDarkMode = () => {
@@ -80,10 +100,15 @@ const App = () => {
     };
 
     return (
-        <div className={darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-black'}> {/* Apply dark mode classes */}
+        <div className={darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-black'}>
             <nav className="bg-gray-800 p-4 relative">
                 <div className="container mx-auto flex justify-between items-center">
-                    <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
+                    <div className="flex items-center">
+                        <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
+                        {isLoggedIn && user && (
+                            <span className="ml-4 text-white">{user.name}</span>  
+                        )}
+                    </div>
                     <button
                         className="text-white md:hidden"
                         onClick={toggleMenu}
@@ -111,7 +136,7 @@ const App = () => {
                             )}
                         </div>
                     </div>
-                    <div className="hidden md:flex md:space-x-4 ml-auto items-center"> {/* Ensured vertical alignment with items-center */}
+                    <div className="hidden md:flex md:space-x-4 ml-auto items-center">
                         <a href="#" onClick={goToHome} className="text-gray-300 hover:text-white px-4 py-2">Home</a>
                         <a href="#" onClick={goToChallenges} className="text-gray-300 hover:text-white px-4 py-2">Challenges</a>
                         <a href="#" onClick={goToProfile} className="text-gray-300 hover:text-white px-4 py-2">Profile</a>
@@ -133,7 +158,6 @@ const App = () => {
 
             {currentPage === 'home' && (
                 <>
-                    {/* Home Section */}
                     <section id="home" className="container mx-auto mt-8 p-4 text-center">
                         <h1 className="text-4xl font-bold text-gray-800 dark:text-white">FITNESS APP</h1>
                         <p className="mt-4 text-gray-600 dark:text-gray-400">Welcome to the Fitness App! Our platform offers a variety of challenges to keep you motivated on your fitness journey.</p>
@@ -144,7 +168,6 @@ const App = () => {
                         </div>
                     </section>
 
-                    {/* How it works Section */}
                     <section id="how-it-works" className="container mx-auto mt-16 p-4">
                         <h2 className="text-3xl font-bold text-gray-800 text-center dark:text-white mb-8">How it works</h2>
                         <div className="flex flex-wrap items-center justify-center">
@@ -182,7 +205,7 @@ const App = () => {
                                             <span className="text-2xl">4</span>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Achieve Goals</h3>
+                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Post your achievements</h3>
                                             <p className="text-gray-600 dark:text-gray-400">Share your journey by posting about the challenges you've accomplished and inspire others to reach their fitness goals too.</p>
                                         </div>
                                     </li>
@@ -194,15 +217,12 @@ const App = () => {
             )}
 
             {currentPage === 'challenges' && <ChallengesPage goBack={goToHome} />}
-            {currentPage === 'profile' && isLoggedIn && <ProfilePage />} {/* Conditionally render ProfilePage */}
-            {currentPage === 'posts' && isLoggedIn && <Posts goBack={goToHome} user={user} />} {/* Conditionally render Posts */}
+            {currentPage === 'profile' && isLoggedIn && <ProfilePage />}
+            {currentPage === 'posts' && isLoggedIn && <Posts goBack={goToHome} user={user} />}
 
-            {/* SignUpForm Modal */}
             {showSignUpForm && <SignUpForm closeModal={closeSignUpForm} />}
-            {/* LoginForm Modal */}
             {showLoginForm && <LoginForm closeModal={closeLoginForm} onLogin={handleLogin} />}
 
-            {/* Footer */}
             <Footer />
         </div>
     );
