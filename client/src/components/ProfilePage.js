@@ -92,14 +92,14 @@ const ProfilePage = () => {
         },
         body: JSON.stringify({
           userId: user.id,
-          challengeId: challenge._id
+          challengeId: challenge._id,
         }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to fetch challenge details');
       }
-      
+
       const data = await response.json();
       setChallengeDetails(data);
       setSelectedDate(null);
@@ -139,7 +139,7 @@ const ProfilePage = () => {
           userId: user.id,
           challengeId: selectedChallenge._id,
           date: selectedDate,
-          value: Number(selectedDateValue)
+          value: Number(selectedDateValue),
         }),
       });
 
@@ -172,11 +172,11 @@ const ProfilePage = () => {
   const dailyGoalLine = dataForGraph.map(() => selectedChallenge.goal);
 
   const graphData = {
-    labels: dataForGraph.map(entry => entry.date),
+    labels: dataForGraph.map((entry) => entry.date),
     datasets: [
       {
         label: `Daily Progress (Avg: ${average})`,
-        data: dataForGraph.map(entry => entry.value),
+        data: dataForGraph.map((entry) => entry.value),
         fill: false,
         backgroundColor: 'rgb(75, 192, 192)',
         borderColor: 'rgba(75, 192, 192, 0.2)',
@@ -240,7 +240,7 @@ const ProfilePage = () => {
               </div>
             </div>
             {isAvatarSelectorOpen && <AvatarSelector onSelect={handleAvatarSelect} />}
-            
+
             <div className="mt-8">
               <h3 className="text-2xl font-bold mb-6">Joined Challenges</h3>
               {user.challenges && user.challenges.length > 0 ? (
@@ -268,8 +268,8 @@ const ProfilePage = () => {
 
           <div className="container mx-auto mt-8 p-4">
             {challengeDetails && (
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center">
-                <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50 p-4">
+                <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl overflow-auto max-h-[90vh]">
                   <button
                     className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
                     aria-label="Close"
@@ -280,18 +280,19 @@ const ProfilePage = () => {
                   <h1 className="text-2xl font-bold mb-4 text-center">{selectedChallenge.title}</h1>
                   <div className="flex justify-center mb-6">
                     <div className="flex items-center">
-                      <h2 className="font-bold mr-2">Daily goal:</h2>
-                      <h3>{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
+                      <h2 className="font-bold mr-2 text-gray-800 dark:text-white">Daily goal:</h2>
+                      <h3 className="text-gray-600 dark:text-gray-400">{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                     </div>
                   </div>
-                  <div className="mt-6">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {sortedDays.reduce((rows, [key, value], index) => {
                       if (index % 5 === 0) rows.push([]);
                       rows[rows.length - 1].push(
                         <button
                           key={key}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2 mr-2"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2"
                           onClick={() => handleButtonClick(key)}
+                          style={{ minWidth: '100px' }}
                         >
                           {key}
                         </button>
@@ -301,14 +302,14 @@ const ProfilePage = () => {
                       <div key={i} className="flex flex-wrap justify-center mb-2">{row}</div>
                     ))}
                   </div>
+
                   {isNumberInputOpen && (
                     <div className="flex items-center justify-center mt-4">
                       <input
                         type="number"
                         value={selectedDateValue}
                         onChange={(e) => setSelectedDateValue(e.target.value)}
-                        className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 p-2 rounded-md mr-2 text-center"
-                        style={{ width: '100px' }}
+                        className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 p-2 rounded-md mr-2 text-center w-20"
                       />
                       <button
                         onClick={handleSave}
