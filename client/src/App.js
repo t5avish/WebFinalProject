@@ -14,6 +14,7 @@ const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const [darkMode, setDarkMode] = useState(false); // Add darkMode state
+    const [menuOpen, setMenuOpen] = useState(false); // Add state to handle mobile menu
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -31,14 +32,19 @@ const App = () => {
     const goToChallenges = () => {
         if (isLoggedIn) {
             setCurrentPage('challenges');
+            setMenuOpen(false); // Close menu on navigation
         } else {
             alert('You must be logged in to access the challenges page.');
         }
     };
-    const goToHome = () => setCurrentPage('home');
+    const goToHome = () => {
+        setCurrentPage('home');
+        setMenuOpen(false); // Close menu on navigation
+    };
     const goToProfile = () => {
         if (isLoggedIn) {
             setCurrentPage('profile');
+            setMenuOpen(false); // Close menu on navigation
         } else {
             alert('You must be logged in to access the profile page.');
         }
@@ -46,6 +52,7 @@ const App = () => {
     const goToPosts = () => {
         if (isLoggedIn) {
             setCurrentPage('posts');
+            setMenuOpen(false); // Close menu on navigation
         } else {
             alert('You must be logged in to access the posts page.');
         }
@@ -61,10 +68,15 @@ const App = () => {
         setIsLoggedIn(false);
         setUser(null);
         goToHome();
+        setMenuOpen(false); // Close menu on logout
     };
 
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
+    };
+
+    const toggleMenu = () => {
+        setMenuOpen(!menuOpen);
     };
 
     return (
@@ -72,21 +84,29 @@ const App = () => {
             <nav className="bg-gray-800 p-4">
                 <div className="container mx-auto flex justify-between items-center">
                     <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
-                    <div className="space-x-4 flex items-center">
-                        <a href="#" onClick={goToHome} className="text-gray-300 hover:text-white">Home</a>
-                        <a href="#" onClick={goToChallenges} className="text-gray-300 hover:text-white">Challenges</a>
-                        <a href="#" onClick={goToProfile} className="text-gray-300 hover:text-white">Profile</a>
-                        <a href="#" onClick={goToPosts} className="text-gray-300 hover:text-white">Posts</a>
+                    <button
+                        className="text-white md:hidden"
+                        onClick={toggleMenu}
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16m-7 6h7'}></path>
+                        </svg>
+                    </button>
+                    <div className={`md:flex md:space-x-4 ${menuOpen ? 'block' : 'hidden'} w-full md:w-auto`}>
+                        <a href="#" onClick={goToHome} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Home</a>
+                        <a href="#" onClick={goToChallenges} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Challenges</a>
+                        <a href="#" onClick={goToProfile} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Profile</a>
+                        <a href="#" onClick={goToPosts} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Posts</a>
                         <button
                             onClick={toggleDarkMode}
-                            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                            className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
                         >
                             {darkMode ? 'Light Mode' : 'Dark Mode'}
                         </button>
                         {isLoggedIn ? (
-                            <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
+                            <button onClick={handleLogout} className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
                         ) : (
-                            <button onClick={openLoginForm} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Log In</button>
+                            <button onClick={openLoginForm} className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Log In</button>
                         )}
                     </div>
                 </div>
