@@ -81,7 +81,7 @@ const App = () => {
 
     return (
         <div className={darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-black'}> {/* Apply dark mode classes */}
-            <nav className="bg-gray-800 p-4">
+            <nav className="bg-gray-800 p-4 relative">
                 <div className="container mx-auto flex justify-between items-center">
                     <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
                     <button
@@ -89,24 +89,43 @@ const App = () => {
                         onClick={toggleMenu}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16m-7 6h7'}></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                         </svg>
                     </button>
-                    <div className={`md:flex md:space-x-4 ${menuOpen ? 'block' : 'hidden'} w-full md:w-auto`}>
-                        <a href="#" onClick={goToHome} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Home</a>
-                        <a href="#" onClick={goToChallenges} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Challenges</a>
-                        <a href="#" onClick={goToProfile} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Profile</a>
-                        <a href="#" onClick={goToPosts} className="block mt-4 md:inline-block md:mt-0 text-gray-300 hover:text-white">Posts</a>
+                    <div className={`absolute top-16 right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg md:hidden ${menuOpen ? 'block' : 'hidden'}`}>
+                        <div className="py-2 space-y-2">
+                            <a href="#" onClick={goToHome} className="block text-gray-300 hover:text-white px-4">Home</a>
+                            <a href="#" onClick={goToChallenges} className="block text-gray-300 hover:text-white px-4">Challenges</a>
+                            <a href="#" onClick={goToProfile} className="block text-gray-300 hover:text-white px-4">Profile</a>
+                            <a href="#" onClick={goToPosts} className="block text-gray-300 hover:text-white px-4">Posts</a>
+                            <button
+                                onClick={toggleDarkMode}
+                                className="block w-full text-left px-4 py-2 text-gray-300 hover:text-white bg-gray-500 rounded-lg hover:bg-gray-700"
+                            >
+                                {darkMode ? 'Light Mode' : 'Dark Mode'}
+                            </button>
+                            {isLoggedIn ? (
+                                <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-gray-300 hover:text-white bg-red-500 rounded-lg hover:bg-red-700">Log Out</button>
+                            ) : (
+                                <button onClick={openLoginForm} className="block w-full text-left px-4 py-2 text-gray-300 hover:text-white bg-blue-500 rounded-lg hover:bg-blue-700">Log In</button>
+                            )}
+                        </div>
+                    </div>
+                    <div className="hidden md:flex md:space-x-4 ml-auto items-center"> {/* Ensured vertical alignment with items-center */}
+                        <a href="#" onClick={goToHome} className="text-gray-300 hover:text-white px-4 py-2">Home</a>
+                        <a href="#" onClick={goToChallenges} className="text-gray-300 hover:text-white px-4 py-2">Challenges</a>
+                        <a href="#" onClick={goToProfile} className="text-gray-300 hover:text-white px-4 py-2">Profile</a>
+                        <a href="#" onClick={goToPosts} className="text-gray-300 hover:text-white px-4 py-2">Posts</a>
                         <button
                             onClick={toggleDarkMode}
-                            className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
                         >
                             {darkMode ? 'Light Mode' : 'Dark Mode'}
                         </button>
                         {isLoggedIn ? (
-                            <button onClick={handleLogout} className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
+                            <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
                         ) : (
-                            <button onClick={openLoginForm} className="block mt-4 md:inline-block md:mt-0 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Log In</button>
+                            <button onClick={openLoginForm} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Log In</button>
                         )}
                     </div>
                 </div>
@@ -164,7 +183,7 @@ const App = () => {
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Achieve Goals</h3>
-                                            <p className="text-gray-600 dark:text-gray-400">Complete challenges, earn rewards, and reach your fitness goals with the support of our community.</p>
+                                            <p className="text-gray-600 dark:text-gray-400">Share your journey by posting about the challenges you've accomplished and inspire others to reach their fitness goals too.</p>
                                         </div>
                                     </li>
                                 </ol>
