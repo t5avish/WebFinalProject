@@ -102,8 +102,8 @@ const ProfilePage = () => {
       
       const data = await response.json();
       setChallengeDetails(data);
-      setSelectedDate(null); // Reset selectedDate when new challenge is selected
-      setSelectedDateValue(data.days[null] || ''); // Reset selectedDateValue when new challenge is selected
+      setSelectedDate(null);
+      setSelectedDateValue(data.days[null] || '');
     } catch (error) {
       setError(error.message);
     }
@@ -111,8 +111,8 @@ const ProfilePage = () => {
 
   const handleButtonClick = (dateKey) => {
     setSelectedDate(dateKey);
-    const value = challengeDetails?.days[dateKey] ?? ''; // Default to empty string if not set
-    setSelectedDateValue(value); // Set value from the challenge details
+    const value = challengeDetails?.days[dateKey] ?? '';
+    setSelectedDateValue(value);
     setIsNumberInputOpen(true);
   };
 
@@ -139,7 +139,7 @@ const ProfilePage = () => {
           userId: user.id,
           challengeId: selectedChallenge._id,
           date: selectedDate,
-          value: Number(selectedDateValue) // Ensure value is sent as a number
+          value: Number(selectedDateValue)
         }),
       });
 
@@ -150,14 +150,14 @@ const ProfilePage = () => {
       const data = await response.json();
       console.log('Update success:', data);
       setIsNumberInputOpen(false);
-      await handleViewChallenge(selectedChallenge); // Optionally refresh challenge details
+      await handleViewChallenge(selectedChallenge);
     } catch (error) {
       setError(error.message);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="text-gray-800 dark:text-white">Loading...</p>;
+  if (error) return <p className="text-red-500 dark:text-red-300">Error: {error}</p>;
 
   const avatarSrc = require(`../assets/${selectedAvatar}`);
   const sortedDays = challengeDetails?.days
@@ -166,18 +166,16 @@ const ProfilePage = () => {
 
   const dataForGraph = sortedDays.filter(([key, value]) => value > 0).map(([key, value]) => ({ date: key, value }));
 
-  // Calculate the average of the Y-axis values
   const total = dataForGraph.reduce((sum, entry) => sum + entry.value, 0);
   const average = dataForGraph.length > 0 ? (total / dataForGraph.length).toFixed(2) : 0;
 
-  // Prepare data for the Daily Goal line
   const dailyGoalLine = dataForGraph.map(() => selectedChallenge.goal);
 
   const graphData = {
     labels: dataForGraph.map(entry => entry.date),
     datasets: [
       {
-        label: `Daily Progress (Avg: ${average})`, // Include the average in the label
+        label: `Daily Progress (Avg: ${average})`,
         data: dataForGraph.map(entry => entry.value),
         fill: false,
         backgroundColor: 'rgb(75, 192, 192)',
@@ -189,7 +187,7 @@ const ProfilePage = () => {
         fill: false,
         backgroundColor: 'rgba(255, 0, 0, 0.2)',
         borderColor: 'rgb(255, 0, 0)',
-        borderDash: [10, 5], // Optional: Make the line dashed
+        borderDash: [10, 5],
       },
     ],
   };
@@ -202,30 +200,26 @@ const ProfilePage = () => {
           text: 'Dates',
         },
         ticks: {
-          maxRotation: 45, // Rotate labels by 45 degrees
-          autoSkip: true,  // Automatically skip labels to reduce density
-          maxTicksLimit: 7, // Limit to a maximum of 7 labels on the X-axis
+          maxRotation: 45,
+          autoSkip: true,
+          maxTicksLimit: 7,
         },
       },
       y: {
         title: {
           display: true,
-          text: selectedChallenge ? selectedChallenge.measurement : 'Value', // Dynamic Y-axis title
+          text: selectedChallenge ? selectedChallenge.measurement : 'Value',
         },
-        beginAtZero: true, // Ensure the Y-axis starts at 0
+        beginAtZero: true,
       },
     },
   };
 
-
-
-
-
   return (
-    <div className="container mx-auto mt-8 p-4">
+    <div className="container mx-auto mt-8 p-4 text-gray-800 dark:text-white">
       {user ? (
         <>
-          <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">User Profile</h1>
+          <h1 className="text-3xl font-bold text-center mb-8">User Profile</h1>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-12">
               <div className="flex items-center space-x-6">
@@ -237,25 +231,25 @@ const ProfilePage = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{user.name}</h3>
-                  <p className="text-gray-600">Age: {user.age}</p>
-                  <p className="text-gray-600">Height: {user.height} cm</p>
-                  <p className="text-gray-600">Weight: {user.weight} kg</p>
-                  <p className="text-gray-600">BMI: {user.bmi}</p>
+                  <h3 className="text-2xl font-bold mb-2">{user.name}</h3>
+                  <p>Age: {user.age}</p>
+                  <p>Height: {user.height} cm</p>
+                  <p>Weight: {user.weight} kg</p>
+                  <p>BMI: {user.bmi}</p>
                 </div>
               </div>
             </div>
             {isAvatarSelectorOpen && <AvatarSelector onSelect={handleAvatarSelect} />}
             
             <div className="mt-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Joined Challenges</h3>
+              <h3 className="text-2xl font-bold mb-6">Joined Challenges</h3>
               {user.challenges && user.challenges.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {user.challenges.map((challenge) => (
-                    <div key={challenge._id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+                    <div key={challenge._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
                       <div className="p-6">
-                        <h3 className="text-xl font-bold text-gray-800 mb-3">{challenge.title}</h3>
-                        <p className="text-gray-600 mb-4">{challenge.description}</p>
+                        <h3 className="text-xl font-bold mb-3">{challenge.title}</h3>
+                        <p className="mb-4">{challenge.description}</p>
                         <button
                           onClick={() => handleViewChallenge(challenge)}
                           className="inline-block w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300 text-center"
@@ -267,17 +261,17 @@ const ProfilePage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-600">You haven't joined any challenges yet.</p>
+                <p>You haven't joined any challenges yet.</p>
               )}
             </div>
           </div>
 
           <div className="container mx-auto mt-8 p-4">
             {challengeDetails && (
-              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                <div className="relative bg-white p-8 rounded-lg shadow-lg">
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center">
+                <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
                   <button
-                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
                     aria-label="Close"
                     onClick={() => setChallengeDetails(null)}
                   >
@@ -290,7 +284,6 @@ const ProfilePage = () => {
                       <h3>{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                     </div>
                   </div>
-                  {/* Remove the average display in green */}
                   <div className="mt-6">
                     {sortedDays.reduce((rows, [key, value], index) => {
                       if (index % 5 === 0) rows.push([]);
@@ -314,19 +307,18 @@ const ProfilePage = () => {
                         type="number"
                         value={selectedDateValue}
                         onChange={(e) => setSelectedDateValue(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-md mr-2 text-center"
+                        className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 p-2 rounded-md mr-2 text-center"
                         style={{ width: '100px' }}
                       />
                       <button
                         onClick={handleSave}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500"
                       >
                         Save
                       </button>
                     </div>
                   )}
 
-                  {/* Add the graph below the challenge details */}
                   <div className="mt-8">
                     <Line data={graphData} options={graphOptions} />
                   </div>
@@ -336,7 +328,7 @@ const ProfilePage = () => {
           </div>
         </>
       ) : (
-        <p className="text-gray-600">No user data available.</p>
+        <p>No user data available.</p>
       )}
     </div>
   );

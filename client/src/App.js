@@ -3,9 +3,9 @@ import SignUpForm from './components/SignUpForm';
 import ChallengesPage from './components/ChallengesPage';
 import LoginForm from './components/LoginForm';
 import ProfilePage from './components/ProfilePage';
-import Posts from './components/Posts'; // Import the Posts component
-import Footer from './components/Footer'; // Import the Footer component
-import './App.css'; // Ensure you import the Tailwind CSS here
+import Posts from './components/Posts';
+import Footer from './components/Footer';
+import './App.css';
 
 const App = () => {
     const [showSignUpForm, setShowSignUpForm] = useState(false);
@@ -13,17 +13,11 @@ const App = () => {
     const [currentPage, setCurrentPage] = useState('home');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
+    const [darkMode, setDarkMode] = useState(false); // Add darkMode state
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Fetch user data from your backend using the token
-            // For this example, we'll use hardcoded user data
-            const userData = {
-                name: 'John Doe',
-                profilePicture: 'https://via.placeholder.com/50'
-            };
-            setUser(userData);
             setIsLoggedIn(true);
         }
     }, []);
@@ -58,12 +52,6 @@ const App = () => {
     };
 
     const handleLogin = () => {
-        // Fetch user data and set it to state
-        const userData = {
-            name: 'John Doe',
-            profilePicture: 'https://via.placeholder.com/50'
-        };
-        setUser(userData);
         setIsLoggedIn(true);
         closeLoginForm();
     };
@@ -75,17 +63,26 @@ const App = () => {
         goToHome();
     };
 
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    };
+
     return (
-        <div className="bg-gray-100 min-h-screen flex flex-col">
-            {/* Navigation Bar */}
+        <div className={darkMode ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-black'}> {/* Apply dark mode classes */}
             <nav className="bg-gray-800 p-4">
                 <div className="container mx-auto flex justify-between items-center">
                     <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
-                    <div className="space-x-4">
+                    <div className="space-x-4 flex items-center">
                         <a href="#" onClick={goToHome} className="text-gray-300 hover:text-white">Home</a>
                         <a href="#" onClick={goToChallenges} className="text-gray-300 hover:text-white">Challenges</a>
                         <a href="#" onClick={goToProfile} className="text-gray-300 hover:text-white">Profile</a>
                         <a href="#" onClick={goToPosts} className="text-gray-300 hover:text-white">Posts</a>
+                        <button
+                            onClick={toggleDarkMode}
+                            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                        >
+                            {darkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button>
                         {isLoggedIn ? (
                             <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700">Log Out</button>
                         ) : (
@@ -99,10 +96,10 @@ const App = () => {
                 <>
                     {/* Home Section */}
                     <section id="home" className="container mx-auto mt-8 p-4 text-center">
-                        <h1 className="text-4xl font-bold text-gray-800">FITNESS APP</h1>
-                        <p className="mt-4 text-gray-600">Welcome to the Fitness App! Our platform offers a variety of challenges to keep you motivated on your fitness journey.</p>
-                        <p className="mt-2 text-gray-600">Whether you're looking to walk 10,000 steps a day or engage in high-intensity workouts, we have something for everyone.</p>
-                        <p className="mt-2 text-gray-600">Join us and be a part of a community that strives for health and fitness.</p>
+                        <h1 className="text-4xl font-bold text-gray-800 dark:text-white">FITNESS APP</h1>
+                        <p className="mt-4 text-gray-600 dark:text-gray-400">Welcome to the Fitness App! Our platform offers a variety of challenges to keep you motivated on your fitness journey.</p>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400">Whether you're looking to walk 10,000 steps a day or engage in high-intensity workouts, we have something for everyone.</p>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400">Join us and be a part of a community that strives for health and fitness.</p>
                         <div className="mt-4 space-x-4">
                             <button onClick={openSignUpForm} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Create account</button>
                         </div>
@@ -110,7 +107,7 @@ const App = () => {
 
                     {/* How it works Section */}
                     <section id="how-it-works" className="container mx-auto mt-16 p-4">
-                        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">How it works</h2>
+                        <h2 className="text-3xl font-bold text-gray-800 text-center dark:text-white mb-8">How it works</h2>
                         <div className="flex flex-wrap items-center justify-center">
                             <div className="w-full lg:w-1/2">
                                 <ol className="space-y-8">
@@ -119,8 +116,8 @@ const App = () => {
                                             <span className="text-2xl">1</span>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-semibold text-gray-800">Sign Up</h3>
-                                            <p className="text-gray-600">Create an account with your email and password to start tracking your fitness journey.</p>
+                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Sign Up</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Create an account with your email and password to start tracking your fitness journey.</p>
                                         </div>
                                     </li>
                                     <li className="flex items-center space-x-4">
@@ -128,8 +125,8 @@ const App = () => {
                                             <span className="text-2xl">2</span>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-semibold text-gray-800">Join Challenges</h3>
-                                            <p className="text-gray-600">Explore various fitness challenges and join those that fit your goals and interests.</p>
+                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Join Challenges</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Explore various fitness challenges and join those that fit your goals and interests.</p>
                                         </div>
                                     </li>
                                     <li className="flex items-center space-x-4">
@@ -137,8 +134,8 @@ const App = () => {
                                             <span className="text-2xl">3</span>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-semibold text-gray-800">Track Progress</h3>
-                                            <p className="text-gray-600">Log your workouts and monitor your progress through your profile page.</p>
+                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Track Progress</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Log your workouts and monitor your progress through your profile page.</p>
                                         </div>
                                     </li>
                                     <li className="flex items-center space-x-4">
@@ -146,8 +143,8 @@ const App = () => {
                                             <span className="text-2xl">4</span>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-semibold text-gray-800">Achieve Goals</h3>
-                                            <p className="text-gray-600">Complete challenges, earn rewards, and reach your fitness goals with the support of our community.</p>
+                                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Achieve Goals</h3>
+                                            <p className="text-gray-600 dark:text-gray-400">Complete challenges, earn rewards, and reach your fitness goals with the support of our community.</p>
                                         </div>
                                     </li>
                                 </ol>
