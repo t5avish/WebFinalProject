@@ -20,27 +20,9 @@ const App = () => {
         const token = localStorage.getItem('token');
         if (token) {
             setIsLoggedIn(true);
-            fetchUserData(); // Fetch user data when token is present
         }
     }, []);
 
-    const fetchUserData = async () => {
-        try {
-            const response = await fetch('/api/profile', { // Replace with your actual API endpoint
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setUser(data);  // Set the user data received from the server
-            } else {
-                console.error('Failed to fetch user data:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Failed to fetch user data:', error);
-        }
-    };
 
     const openSignUpForm = () => setShowSignUpForm(true);
     const closeSignUpForm = () => setShowSignUpForm(false);
@@ -80,7 +62,6 @@ const App = () => {
     const handleLogin = () => {
         setIsLoggedIn(true);
         closeLoginForm();
-        fetchUserData(); 
     };
 
     const handleLogout = () => {
