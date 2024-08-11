@@ -1,7 +1,7 @@
 import { connectToDatabase } from '../../lib/mongodb';
 import jwt from 'jsonwebtoken';
 import cors from '../../lib/cors';
-import { ObjectId } from 'mongodb'; // Import ObjectId from mongodb package
+import { ObjectId } from 'mongodb';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
-    
+
       let decoded;
       try {
         decoded = jwt.verify(token, JWT_SECRET);
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       }
       const user = await db.collection('users').findOne({ _id: new ObjectId(decoded.userId) });
 
-      const { challengeId } = req.body;
+      const { challengeId, overwrite } = req.body;
 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -75,13 +75,29 @@ export default async function handler(req, res) {
         days[formattedDate] = 0;
       }
 
-      const result = await db.collection('users_challenges').insertOne({
-        challenge_id: challenge._id,
-        user_id: user._id,
-        days: days
-      });
+      console.log('Days structure:', days); // Log the days structure
 
-      res.status(201).json({ message: 'Joined challenge successfully', data: result.insertedId });
+      if (overwrite) {
+        const updateResult = await db.collection('users_challenges').updateOne(
+          { user_id: user._id, challenge_id: new ObjectId(challengeId) },
+          {
+            $set: {
+              days: days
+            }
+          },
+          { upsert: true }
+        );
+        console.log('Update result:', updateResult); // Log update result
+        res.status(200).json({ message: 'Challenge updated successfully' });
+      } else {
+        const insertResult = await db.collection('users_challenges').insertOne({
+          challenge_id: challenge._id,
+          user_id: user._id,
+          days: days
+        });
+        console.log('Insert result:', insertResult); // Log insert result
+        res.status(201).json({ message: 'Joined challenge successfully', data: insertResult.insertedId });
+      }
     } catch (error) {
       console.error('Error joining challenge:', error);
       res.status(500).json({ message: 'Internal Server Error' });

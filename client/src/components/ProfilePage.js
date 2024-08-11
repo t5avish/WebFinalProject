@@ -101,10 +101,19 @@ const ProfilePage = () => {
       }
 
       const data = await response.json();
+      console.log('Fetched challenge details:', data); // Debugging log
+
+      if (!data || !data.days || Object.keys(data.days).length === 0) {
+        console.error('Error: Challenge details are incomplete or missing.');
+        console.error('Received data:', data); // Log what was received
+        throw new Error('Challenge details are incomplete');
+      }
+
       setChallengeDetails(data);
       setSelectedDate(null);
-      setSelectedDateValue(data.days[null] || '');
+      setSelectedDateValue('');
     } catch (error) {
+      console.error('Error fetching challenge details:', error);
       setError(error.message);
     }
   };
@@ -119,6 +128,13 @@ const ProfilePage = () => {
   const handleSave = async () => {
     if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) <= 0) {
       window.alert('Value must be a number greater than 0');
+      return;
+    }
+
+    const originalValue = challengeDetails?.days[selectedDate];
+
+    if (Number(selectedDateValue) === originalValue) {
+      window.alert('No changes detected. The value is the same as before.');
       return;
     }
 
@@ -148,7 +164,6 @@ const ProfilePage = () => {
       }
 
       const data = await response.json();
-      console.log('Update success:', data);
       setIsNumberInputOpen(false);
       await handleViewChallenge(selectedChallenge);
     } catch (error) {
@@ -285,13 +300,13 @@ const ProfilePage = () => {
                         <h3 className="text-gray-600 dark:text-gray-400">{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                       </div>
                     </div>
-                    <div className="flex flex-wrap justify-center gap-4"> {/* Increased gap to 4 */}
+                    <div className="flex flex-wrap justify-center gap-4">
                       {sortedDays.reduce((rows, [key, value], index) => {
                         if (index % 5 === 0) rows.push([]);
                         rows[rows.length - 1].push(
                           <button
                             key={key}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4 mx-2" // Added mx-2 for horizontal spacing and mb-4 for vertical spacing
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4 mx-2"
                             onClick={() => handleButtonClick(key)}
                             style={{ minWidth: '100px' }}
                           >

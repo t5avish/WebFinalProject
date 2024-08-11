@@ -15,13 +15,13 @@ const ChallengesPage = () => {
       try {
         const response = await fetch(URL + 'challenges', {
           method: 'GET',
-          credentials: 'include', // If you need to include cookies or authentication headers
+          credentials: 'include',
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setChallenges(data); // Update state with challenges data
+        setChallenges(data);
       } catch (error) {
         console.error('Failed to fetch challenges:', error);
       }
@@ -77,7 +77,7 @@ const ChallengesPage = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ challengeId }),
+        body: JSON.stringify({ challengeId, overwrite: true }),
       });
       if (response.ok) {
         alert('Successfully joined the challenge');
