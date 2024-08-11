@@ -318,8 +318,9 @@ const ProfilePage = () => {
                     />
                   </div>
                   <div>
+                    <p className="text-2xl font-bold">{user.name}</p>
                     {editing ? (
-                      <div>
+                      <>
                         <div className="mb-2">
                           <label className="block text-gray-700 dark:text-gray-300">Age:</label>
                           <input
@@ -347,32 +348,34 @@ const ProfilePage = () => {
                             className="border p-2 w-full rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                           />
                         </div>
-                        <button
-                          onClick={handleSaveProfile}
-                          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
-                        >
-                          Save Changes
-                        </button>
-                        <button
-                          onClick={() => setEditing(false)}
-                          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 ml-4"
-                        >
-                          Cancel
-                        </button>
-                      </div>
+                        <div className="flex justify-center space-x-4">
+                          <button
+                            onClick={handleSaveProfile}
+                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            onClick={() => setEditing(false)}
+                            className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </>
                     ) : (
-                      <div>
-                        <p>Age: {user.age}</p>
-                        <p>Height: {user.height} cm</p>
-                        <p>Weight: {user.weight} kg</p>
-                        <p>BMI: {user.bmi}</p>
+                      <>
+                        <p className="text-lg">Age: {user.age}</p>
+                        <p className="text-lg">Height: {user.height} cm</p>
+                        <p className="text-lg">Weight: {user.weight} kg</p>
+                        <p className="text-lg">BMI: {user.bmi}</p>
                         <button
                           onClick={() => setEditing(true)}
                           className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500"
                         >
                           Edit Profile
                         </button>
-                      </div>
+                      </>
                     )}
                   </div>
                 </div>
