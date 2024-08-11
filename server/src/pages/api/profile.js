@@ -1,9 +1,7 @@
 import { connectToDatabase } from '../../lib/mongodb';
 import jwt from 'jsonwebtoken';
 import cors from '../../lib/cors';
-import initMiddleware from '../../lib/init-middleware';
 import { ObjectId } from 'mongodb';
-import { URL } from '../../../settings'
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -21,6 +19,7 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
+  
   const db = await connectToDatabase();
 
   if (req.method === 'GET') {
@@ -71,6 +70,37 @@ export default async function handler(req, res) {
       res.status(200).json({ message: 'Avatar updated successfully' });
     } catch (error) {
       console.error('Avatar update error:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  } else if (req.method === 'PUT') {
+    const { age, weight, height } = req.body;
+
+    if (age === undefined || weight === undefined || height === undefined) {
+      return res.status(400).json({ message: 'All fields (age, weight, height) are required' });
+    }
+
+    try {
+      await db.collection('users').updateOne(
+        { _id: new ObjectId(decoded.userId) },
+        { $set: { age, weight, height } }
+      );
+
+      const updatedUser = await db.collection('users').findOne({ _id: new ObjectId(decoded.userId) });
+      const heightInMeters = updatedUser.height / 100;
+      const bmi = (updatedUser.weight / (heightInMeters ** 2)).toFixed(2);
+      updatedUser.bmi = bmi;
+
+      // Fetch user's challenges
+      const userChallenges = await db.collection('users_challenges').find({ user_id: new ObjectId(decoded.userId) }).toArray();
+      const challengeIds = userChallenges.map(uc => new ObjectId(uc.challenge_id));
+      const challenges = await db.collection('challenges').find({ _id: { $in: challengeIds } }).toArray();
+
+      res.status(200).json({
+        ...updatedUser,
+        challenges: challenges
+      });
+    } catch (error) {
+      console.error('Profile update error:', error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   } else {

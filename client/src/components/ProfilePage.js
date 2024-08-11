@@ -11,6 +11,10 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [isAvatarSelectorOpen, setIsAvatarSelectorOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [age, setAge] = useState('');
+  const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [challengeDetails, setChallengeDetails] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -37,11 +41,16 @@ const ProfilePage = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          const errorData = await response.json();
+          console.error('Error fetching user data:', errorData.message);
+          throw new Error(errorData.message || 'Failed to fetch user data');
         }
         const data = await response.json();
         setUser(data);
         setSelectedAvatar(data.avatar);
+        setAge(data.age);
+        setWeight(data.weight);
+        setHeight(data.height);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -81,6 +90,75 @@ const ProfilePage = () => {
     }
   };
 
+  const handleSaveProfile = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Not authenticated');
+      return;
+    }
+
+    try {
+      const response = await fetch(URL + 'profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ age, weight, height }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      setEditing(false);
+
+      // Force refetching of user data after profile update
+      await fetchUserDetails();  // Call the fetchUser function to reload the data after saving
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const fetchUserDetails = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(URL + 'profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error fetching user data:', errorData.message);
+        throw new Error(errorData.message || 'Failed to fetch user data');
+      }
+      const data = await response.json();
+      setUser(data);
+      setSelectedAvatar(data.avatar);
+      setAge(data.age);
+      setWeight(data.weight);
+      setHeight(data.height);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleViewChallenge = async (challenge) => {
     setSelectedChallenge(challenge);
 
@@ -97,23 +175,16 @@ const ProfilePage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch challenge details');
+        const errorData = await response.json();
+        console.error('Error fetching challenge details:', errorData.message);
+        throw new Error(errorData.message || 'Failed to fetch challenge details');
       }
 
       const data = await response.json();
-      console.log('Fetched challenge details:', data); // Debugging log
-
-      if (!data || !data.days || Object.keys(data.days).length === 0) {
-        console.error('Error: Challenge details are incomplete or missing.');
-        console.error('Received data:', data); // Log what was received
-        throw new Error('Challenge details are incomplete');
-      }
-
       setChallengeDetails(data);
       setSelectedDate(null);
       setSelectedDateValue('');
     } catch (error) {
-      console.error('Error fetching challenge details:', error);
       setError(error.message);
     }
   };
@@ -247,11 +318,62 @@ const ProfilePage = () => {
                     />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2">{user.name}</h3>
-                    <p>Age: {user.age}</p>
-                    <p>Height: {user.height} cm</p>
-                    <p>Weight: {user.weight} kg</p>
-                    <p>BMI: {user.bmi}</p>
+                    {editing ? (
+                      <div>
+                        <div className="mb-2">
+                          <label className="block text-gray-700 dark:text-gray-300">Age:</label>
+                          <input
+                            type="number"
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
+                            className="border p-2 w-full rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <label className="block text-gray-700 dark:text-gray-300">Height (cm):</label>
+                          <input
+                            type="number"
+                            value={height}
+                            onChange={(e) => setHeight(e.target.value)}
+                            className="border p-2 w-full rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          />
+                        </div>
+                        <div className="mb-2">
+                          <label className="block text-gray-700 dark:text-gray-300">Weight (kg):</label>
+                          <input
+                            type="number"
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            className="border p-2 w-full rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                          />
+                        </div>
+                        <button
+                          onClick={handleSaveProfile}
+                          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500"
+                        >
+                          Save Changes
+                        </button>
+                        <button
+                          onClick={() => setEditing(false)}
+                          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 ml-4"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>Age: {user.age}</p>
+                        <p>Height: {user.height} cm</p>
+                        <p>Weight: {user.weight} kg</p>
+                        <p>BMI: {user.bmi}</p>
+                        <button
+                          onClick={() => setEditing(true)}
+                          className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500"
+                        >
+                          Edit Profile
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -282,67 +404,65 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="container mx-auto mt-8 p-4">
-              {challengeDetails && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50 p-4">
-                  <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl overflow-auto max-h-[90vh]">
-                    <button
-                      className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                      aria-label="Close"
-                      onClick={() => setChallengeDetails(null)}
-                    >
-                      X
-                    </button>
-                    <h1 className="text-2xl font-bold mb-4 text-center">{selectedChallenge.title}</h1>
-                    <div className="flex justify-center mb-6">
-                      <div className="flex items-center">
-                        <h2 className="font-bold mr-2 text-gray-800 dark:text-white">Daily goal:</h2>
-                        <h3 className="text-gray-600 dark:text-gray-400">{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-4">
-                      {sortedDays.reduce((rows, [key, value], index) => {
-                        if (index % 5 === 0) rows.push([]);
-                        rows[rows.length - 1].push(
-                          <button
-                            key={key}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4 mx-2"
-                            onClick={() => handleButtonClick(key)}
-                            style={{ minWidth: '100px' }}
-                          >
-                            {key}
-                          </button>
-                        );
-                        return rows;
-                      }, []).map((row, i) => (
-                        <div key={i} className="flex flex-wrap justify-center mb-2">{row}</div>
-                      ))}
-                    </div>
-
-                    {isNumberInputOpen && (
-                      <div className="flex items-center justify-center mt-4">
-                        <input
-                          type="number"
-                          value={selectedDateValue}
-                          onChange={(e) => setSelectedDateValue(e.target.value)}
-                          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 p-2 rounded-md mr-2 text-center w-20"
-                        />
-                        <button
-                          onClick={handleSave}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    )}
-
-                    <div className="mt-8">
-                      <Line data={graphData} options={graphOptions} />
+            {challengeDetails && (
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50 p-4">
+                <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl overflow-auto max-h-[90vh]">
+                  <button
+                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                    aria-label="Close"
+                    onClick={() => setChallengeDetails(null)}
+                  >
+                    X
+                  </button>
+                  <h1 className="text-2xl font-bold mb-4 text-center">{selectedChallenge.title}</h1>
+                  <div className="flex justify-center mb-6">
+                    <div className="flex items-center">
+                      <h2 className="font-bold mr-2 text-gray-800 dark:text-white">Daily goal:</h2>
+                      <h3 className="text-gray-600 dark:text-gray-400">{selectedChallenge.goal} {selectedChallenge.measurement}</h3>
                     </div>
                   </div>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    {sortedDays.reduce((rows, [key, value], index) => {
+                      if (index % 5 === 0) rows.push([]);
+                      rows[rows.length - 1].push(
+                        <button
+                          key={key}
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-4 mx-2"
+                          onClick={() => handleButtonClick(key)}
+                          style={{ minWidth: '100px' }}
+                        >
+                          {key}
+                        </button>
+                      );
+                      return rows;
+                    }, []).map((row, i) => (
+                      <div key={i} className="flex flex-wrap justify-center mb-2">{row}</div>
+                    ))}
+                  </div>
+
+                  {isNumberInputOpen && (
+                    <div className="flex items-center justify-center mt-4">
+                      <input
+                        type="number"
+                        value={selectedDateValue}
+                        onChange={(e) => setSelectedDateValue(e.target.value)}
+                        className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 p-2 rounded-md mr-2 text-center w-20"
+                      />
+                      <button
+                        onClick={handleSave}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="mt-8">
+                    <Line data={graphData} options={graphOptions} />
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </>
         ) : (
           <p>No user data available.</p>
