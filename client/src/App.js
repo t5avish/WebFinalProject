@@ -23,7 +23,6 @@ const App = () => {
         }
     }, []);
 
-
     const openSignUpForm = () => setShowSignUpForm(true);
     const closeSignUpForm = () => setShowSignUpForm(false);
 
@@ -38,10 +37,12 @@ const App = () => {
             alert('You must be logged in order to access the challenges page.');
         }
     };
+
     const goToHome = () => {
         setCurrentPage('home');
         setMenuOpen(false);
     };
+
     const goToProfile = () => {
         if (isLoggedIn) {
             setCurrentPage('profile');
@@ -50,6 +51,7 @@ const App = () => {
             alert('You must be logged in order to access the profile page.');
         }
     };
+
     const goToPosts = () => {
         if (isLoggedIn) {
             setCurrentPage('posts');
@@ -85,7 +87,10 @@ const App = () => {
             <nav className="bg-gray-800 p-4 relative">
                 <div className="container mx-auto flex justify-between items-center">
                     <div className="flex items-center">
-                        <a href="#" onClick={goToHome} className="text-white text-2xl font-bold">Fitness App</a>
+                        <a href="#" onClick={goToHome} className="text-white text-2xl font-bold flex items-center">
+                            <img src="/Logo1.jpg" alt="Fitness App Logo" className="h-8 w-8 mr-3 object-contain" style={{ borderRadius: '50%' }} /> {/* Add border-radius for rounded logo */}
+                            Fitness App
+                        </a>
                         {isLoggedIn && user && (
                             <span className="ml-4 text-white">{user.name}</span>  
                         )}

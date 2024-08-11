@@ -173,7 +173,7 @@ const ChallengesPage = () => {
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 dark:text-gray-300">Goal:</label>
+                <label className="block text-gray-700 dark:text-gray-300">Daily goal:</label>
                 <input
                   type="number"
                   value={goal}
