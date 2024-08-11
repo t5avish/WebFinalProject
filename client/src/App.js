@@ -35,7 +35,7 @@ const App = () => {
             setCurrentPage('challenges');
             setMenuOpen(false);
         } else {
-            alert('You must be logged in to access the challenges page.');
+            alert('You must be logged in order to access the challenges page.');
         }
     };
     const goToHome = () => {
@@ -47,7 +47,7 @@ const App = () => {
             setCurrentPage('profile');
             setMenuOpen(false);
         } else {
-            alert('You must be logged in to access the profile page.');
+            alert('You must be logged in order to access the profile page.');
         }
     };
     const goToPosts = () => {
@@ -55,7 +55,7 @@ const App = () => {
             setCurrentPage('posts');
             setMenuOpen(false);
         } else {
-            alert('You must be logged in to access the posts page.');
+            alert('You must be logged in order to access the posts page.');
         }
     };
 
