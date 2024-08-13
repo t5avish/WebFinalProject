@@ -1,1 +1,1 @@
-export const URL = "https://fitness-rho-nine.vercel.app" // SERVER VERCEL
+export const URL = "http://localhost:3001" // SERVER LOCAL

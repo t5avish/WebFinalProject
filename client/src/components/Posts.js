@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { URL } from '../settings';
+import PostForm from './PostForm';
+import PostList from './PostList';
+import ErrorPopup from './ErrorPopup';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -7,8 +10,8 @@ const Posts = () => {
   const [text, setText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [user, setUser] = useState(null);
-  const [likeError, setLikeError] = useState(''); // State for like error message
-  const [showErrorPopup, setShowErrorPopup] = useState(false); // State to manage error popup visibility
+  const [likeError, setLikeError] = useState(''); 
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -80,7 +83,7 @@ const Posts = () => {
         body: JSON.stringify({
           user: {
             name: user.name,
-            profilePicture: user.avatar, // Ensure this field matches what is stored in the DB
+            profilePicture: user.avatar,
           },
           text,
         }),
@@ -124,15 +127,15 @@ const Posts = () => {
 
       if (response.ok) {
         setPosts(posts.map(post => post._id === postId ? result : post));
-        setLikeError(''); // Clear any previous error message
+        setLikeError(''); 
       } else {
-        setLikeError(result.message || 'Failed to like post'); // Set the error message for liking a post
-        setShowErrorPopup(true); // Show the error popup window
+        setLikeError(result.message || 'Failed to like post');
+        setShowErrorPopup(true);
       }
     } catch (error) {
       console.error('Failed to like post:', error);
       setLikeError('Failed to like post');
-      setShowErrorPopup(true); // Show the error popup window
+      setShowErrorPopup(true);
     }
   };
 
@@ -149,65 +152,27 @@ const Posts = () => {
         <button onClick={handleAddPostClick} className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 dark:bg-gray-600 dark:hover:bg-gray-500">Add New Post</button>
       </div>
 
+      {/* Conditionally render the PostForm component */}
       {showForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center">
-          <div className="relative bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
-            <button 
-              onClick={handleFormClose} 
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-              aria-label="Close"
-            >
-              X
-            </button>
-            <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Add New Post</h3>
-            {errorMessage && <p className="text-red-500 mb-4 text-center dark:text-red-300">{errorMessage}</p>}
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700 dark:text-gray-300">Text:</label>
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  className="border p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                />
-              </div>
-              <div className="text-center">
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500">Submit</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <PostForm 
+          text={text}
+          setText={setText}
+          errorMessage={errorMessage}
+          handleSubmit={handleSubmit}
+          handleFormClose={handleFormClose}
+        />
       )}
 
+      {/* Render the PostList component */}
+      <PostList posts={posts} handleLikePost={handleLikePost} />
+
+      {/* Conditionally render the ErrorPopup component */}
       {showErrorPopup && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded shadow-lg relative">
-            <button onClick={handleErrorPopupClose} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 z-30">
-              &times;
-            </button>
-            <p className="text-gray-800 dark:text-white mb-4">{likeError}</p>
-            <button onClick={handleErrorPopupClose} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500">
-              Close
-            </button>
-          </div>
-        </div>
+        <ErrorPopup 
+          likeError={likeError}
+          handleErrorPopupClose={handleErrorPopupClose}
+        />
       )}
-
-      {posts.map(post => (
-        <div key={post._id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-4 flex">
-          <div className="w-1/4 flex flex-col items-center">
-            <img src={require(`../assets/${post.user.profilePicture}`)} alt={post.user.name} className="w-10 h-10 rounded-full mb-4" />
-            <h3 className="text-lg font-bold text-gray-800 dark:text-white">{post.user.name}</h3>
-            <p className="text-gray-600 dark:text-gray-400">{new Date(post.date).toLocaleString()}</p>
-            <button onClick={() => handleLikePost(post._id)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500">
-              Like
-            </button>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">{post.likes ? post.likes.length : 0} {post.likes && post.likes.length === 1 ? 'person likes' : 'people like'} this post</p>
-          </div>
-          <div className="w-3/4 text-center flex items-center justify-center">
-            <p className="mb-4 text-gray-800 dark:text-gray-300">{post.text}</p>
-          </div>
-        </div>
-      ))}
     </section>
   );
 };

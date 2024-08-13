@@ -1,1 +1,1 @@
-export const URL = "https://web-final-project-server.vercel.app/api/" //CLIENT VERCEL
+export const URL = "http://localhost:3000/api/" // CLIENT LOCAL
