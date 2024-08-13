@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { URL } from '../settings';
+import { URL } from '../../settings';
 import PostForm from './PostForm';
 import PostList from './PostList';
 import ErrorPopup from './ErrorPopup';
@@ -166,7 +166,7 @@ const Posts = () => {
       {/* Render the PostList component */}
       <PostList posts={posts} handleLikePost={handleLikePost} />
 
-      {/* Conditionally render the ErrorPopup component */}
+      {/* Conditionally render the ErrorPopup component  */}
       {showErrorPopup && (
         <ErrorPopup 
           likeError={likeError}

@@ -3,7 +3,7 @@ import UserDetails from './UserDetails';
 import ChallengesList from './ChallengesList';
 import ChallengeDetails from './ChallengeDetails';
 import 'tailwindcss/tailwind.css';
-import { URL } from '../settings';
+import { URL } from '../../settings';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -87,7 +87,6 @@ const ProfilePage = () => {
             setUser(updatedUser);
             setEditing(false);
 
-            // Refetch user details after saving
             await fetchUser();
         } catch (error) {
             setError(error.message);

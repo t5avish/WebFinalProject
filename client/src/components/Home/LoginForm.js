@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { URL } from '../settings';
+import { URL } from '../../settings';
 
 const LoginForm = ({ closeModal, onLogin }) => {
   const [email, setEmail] = useState('');

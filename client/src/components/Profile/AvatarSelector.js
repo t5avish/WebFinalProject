@@ -14,7 +14,6 @@ const AvatarSelector = ({ onSelect }) => {
     'avatar10.png',
     'avatar11.png',
     'profile-pic.png',
-    // Add more avatar filenames here
   ];
 
   const handleAvatarClick = (avatar) => {
@@ -28,7 +27,7 @@ const AvatarSelector = ({ onSelect }) => {
         {avatars.map((avatar, index) => (
           <img
             key={index}
-            src={require(`../assets/${avatar}`)}
+            src={require(`../../assets/${avatar}`)}
             alt={`Avatar ${index + 1}`}
             onClick={() => handleAvatarClick(avatar)}
             className="cursor-pointer w-20 h-20 object-cover rounded-full border-2 border-transparent hover:border-blue-500 transition duration-200"

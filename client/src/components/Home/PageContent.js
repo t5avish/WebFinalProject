@@ -1,8 +1,8 @@
 import React from 'react';
 import HomeContent from './HomeContent';
-import ChallengesPage from './ChallengesPage';
-import ProfilePage from './ProfilePage';
-import Posts from './Posts';
+import ChallengesPage from '../Challenges/ChallengesPage';
+import ProfilePage from '../Profile/ProfilePage';
+import Posts from '../Posts/Posts';
 
 const PageContent = ({ currentPage, isLoggedIn, goToHome, user, openSignUpForm }) => {
     return (

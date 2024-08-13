@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import SignUpForm from './components/SignUpForm';
-import ChallengesPage from './components/ChallengesPage';
-import LoginForm from './components/LoginForm';
-import ProfilePage from './components/ProfilePage';
-import Posts from './components/Posts';
-import Footer from './components/Footer';
-import HomeContent from './components/HomeContent'; // Import the new component
-import NavBar from './components/NavBar';
-import PageContent from './components/PageContent';
+import SignUpForm from './components/Home/SignUpForm';
+import LoginForm from './components/Home/LoginForm';
+import Footer from './components/Common/Footer';
+import NavBar from './components/Common/NavBar';
+import PageContent from './components/Home/PageContent';
 import './App.css';
 
 const App = () => {

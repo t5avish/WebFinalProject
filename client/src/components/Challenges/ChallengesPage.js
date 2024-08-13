@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { URL } from '../settings';
+import { URL } from '../../settings';
 import ChallengeForm from './ChallengeForm';
 import ChallengeList from './ChallengeList';
-import ChallengesHeader from './ChallengesHeader';  // Import the new component
+import ChallengesHeader from './ChallengesHeader';  
 
 const ChallengesPage = () => {
   const [challenges, setChallenges] = useState([]);

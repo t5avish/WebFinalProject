@@ -17,7 +17,7 @@ const UserDetails = ({
     isAvatarSelectorOpen,
     handleAvatarSelect
 }) => {
-    const avatarSrc = selectedAvatar ? require(`../assets/${selectedAvatar}`) : null;
+    const avatarSrc = selectedAvatar ? require(`../../assets/${selectedAvatar}`) : null;
 
     return (
         <>
