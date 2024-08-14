@@ -17,11 +17,9 @@ const LoginForm = ({ closeModal, onLogin }) => {
       });
 
       const data = await response.json();
-      console.log('Response data:', data); // For debugging
-
       if (response.ok) {
         localStorage.setItem('token', data.token);
-        onLogin(); // Notify parent about successful login
+        onLogin();
         closeModal();
       } else {
         setError(data.message);
