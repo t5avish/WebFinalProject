@@ -1,10 +1,12 @@
 import { connectToDatabase } from '../lib/mongodb';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
+import cors from '../lib/cors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
+  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
   const db = await connectToDatabase();
 
   if (req.method === 'GET') {

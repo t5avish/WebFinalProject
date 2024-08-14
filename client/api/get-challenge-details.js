@@ -1,7 +1,9 @@
 import {ObjectId } from 'mongodb';
 import { connectToDatabase } from '../lib/mongodb';
+import cors from '../lib/cors';
 
 export default async function handler(req, res) {
+    await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
     if (req.method === 'POST') {
         const { userId, challengeId } = req.body;
 

@@ -1,9 +1,11 @@
 import { connectToDatabase } from '../lib/mongodb';
 import jwt from 'jsonwebtoken';
+import cors from '../lib/cors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
+  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
