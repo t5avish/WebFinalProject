@@ -1,10 +1,7 @@
-import { connectToDatabase } from '../../lib/mongodb';
-import cors from '../../lib/cors';
+import { connectToDatabase } from '../lib/mongodb';
 import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
-  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
-
   const db = await connectToDatabase();
 
   if (req.method === 'GET') {

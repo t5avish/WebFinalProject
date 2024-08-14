@@ -3,7 +3,6 @@ import UserDetails from './UserDetails';
 import ChallengesList from './ChallengesList';
 import ChallengeDetails from './ChallengeDetails';
 import 'tailwindcss/tailwind.css';
-import { URL } from '../../settings';
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -30,7 +29,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await fetch(URL + 'profile', {
+            const response = await fetch('/api/profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -69,7 +68,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await fetch(URL + 'profile', {
+            const response = await fetch('/api/profile', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -104,7 +103,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await fetch(URL + 'profile', {
+            const response = await fetch('/api/profile', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -126,7 +125,7 @@ const ProfilePage = () => {
         setSelectedChallenge(challenge);
 
         try {
-            const response = await fetch(URL + 'get-challenge-details', {
+            const response = await fetch('/api/get-challenge-details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -179,7 +178,7 @@ const ProfilePage = () => {
         }
 
         try {
-            const response = await fetch(URL + 'get-challenge-details', {
+            const response = await fetch('/api/get-challenge-details', {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,

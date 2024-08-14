@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { URL } from '../../settings';
 import ChallengeForm from './ChallengeForm';
 import ChallengeList from './ChallengeList';
 import ChallengesHeader from './ChallengesHeader';  
@@ -16,7 +15,7 @@ const ChallengesPage = () => {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-        const response = await fetch(URL + 'challenges', {
+        const response = await fetch('/api/challenges', {
           method: 'GET',
           credentials: 'include',
         });
@@ -41,7 +40,7 @@ const ChallengesPage = () => {
     }
 
     try {
-      const response = await fetch(URL + 'challenges', {
+      const response = await fetch('/api/challenges', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +72,7 @@ const ChallengesPage = () => {
         return;
       }
 
-      const response = await fetch(URL + 'challenges', {
+      const response = await fetch('/api/challenges', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

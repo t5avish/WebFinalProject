@@ -1,13 +1,10 @@
-import { connectToDatabase } from '../../lib/mongodb';
+import { connectToDatabase } from '../lib/mongodb';
 import jwt from 'jsonwebtoken';
-import cors from '../../lib/cors';
 import { ObjectId } from 'mongodb';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
-  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
-
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });

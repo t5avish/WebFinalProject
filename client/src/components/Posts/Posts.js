@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { URL } from '../../settings';
 import PostForm from './PostForm';
 import PostList from './PostList';
 import ErrorPopup from './ErrorPopup';
@@ -16,7 +15,7 @@ const Posts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(URL + 'posts', {
+        const response = await fetch('/api/posts', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +42,7 @@ const Posts = () => {
       }
 
       try {
-        const response = await fetch(URL + 'profile', {
+        const response = await fetch('/api/profile', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -75,7 +74,7 @@ const Posts = () => {
     }
 
     try {
-      const response = await fetch(URL + 'posts', {
+      const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +114,7 @@ const Posts = () => {
 
   const handleLikePost = async (postId) => {
     try {
-      const response = await fetch(URL + 'posts', {
+      const response = await fetch('/api/posts', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

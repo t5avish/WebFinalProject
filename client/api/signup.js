@@ -1,12 +1,7 @@
-
-import initMiddleware from '../../lib/init-middleware';  // Adjust path if needed
-import { connectToDatabase } from '../../lib/mongodb';   // Adjust path if needed
-import { URL } from '../../../settings'
-import cors from '../../lib/cors';
+import { connectToDatabase } from '../lib/mongodb';  
 
 export default async function handler(req, res) {
-  await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
-
+ 
   if (req.method === 'POST') {
     try {
       const db = await connectToDatabase();
