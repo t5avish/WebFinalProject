@@ -1,33 +1,16 @@
 import { useState, useEffect } from 'react';
 
-// Custom hook for handling post form state
-export const usePostForm = () => {
-  const [text, setText] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const resetForm = () => {
-    setText('');
-    setErrorMessage('');
-  };
-
-  return {
-    text,
-    setText,
-    errorMessage,
-    setErrorMessage,
-    resetForm,
-  };
-};
-
-// Custom hook for managing posts
+// Custom hook for managing posts and user data
 export const usePosts = () => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
   const [likeError, setLikeError] = useState('');
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   useEffect(() => {
+    // Fetch posts when component mounts
     const fetchPosts = async () => {
       try {
         const response = await fetch('/api/posts', {
@@ -41,17 +24,20 @@ export const usePosts = () => {
         if (response.ok) {
           setPosts(result);
         } else {
-          throw new Error(result.message || 'Error fetching posts');
+          setError(result.message || 'Error fetching posts');
         }
       } catch (error) {
+        setError('Error fetching posts');
         console.error('Error fetching posts:', error);
       }
     };
 
-    const fetchUserProfile = async () => {
+    // Fetch user data when component mounts
+    const fetchUser = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        throw new Error('Not authenticated');
+        setError('Not authenticated');
+        return;
       }
 
       try {
@@ -67,56 +53,69 @@ export const usePosts = () => {
         if (response.ok) {
           setUser(result);
         } else {
-          throw new Error(result.message || 'Failed to fetch user profile');
+          setError(result.message || 'Failed to fetch user profile');
         }
       } catch (error) {
+        setError('Failed to fetch user profile');
         console.error('Failed to fetch user profile:', error);
       }
     };
 
     fetchPosts();
-    fetchUserProfile();
+    fetchUser();
   }, []);
 
   const handleLikePost = async (postId) => {
     try {
-      const response = await fetch('/api/posts', {
-        method: 'PUT',
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ postId, userId: user.id }),
+        body: JSON.stringify({ userId: user.id }),
       });
 
       const result = await response.json();
-
       if (response.ok) {
         setPosts(posts.map((post) => (post._id === postId ? result : post)));
-        setLikeError('');
       } else {
-        throw new Error(result.message || 'Failed to like post');
+        setLikeError(result.message || 'Failed to like post');
+        setShowErrorPopup(true);
       }
     } catch (error) {
-      console.error('Failed to like post:', error);
       setLikeError('Failed to like post');
       setShowErrorPopup(true);
+      console.error('Failed to like post:', error);
     }
   };
 
-  const handleAddPostClick = () => setShowForm(true);
-  const handleFormClose = () => setShowForm(false);
-  const handleErrorPopupClose = () => setShowErrorPopup(false);
+  const toggleFormVisibility = () => setShowForm(!showForm);
+  const closeErrorPopup = () => setShowErrorPopup(false);
 
   return {
     posts,
     user,
+    error,
     likeError,
-    showErrorPopup,
     showForm,
-    setShowForm,
+    showErrorPopup,
+    setPosts,
+    setError,
     handleLikePost,
-    handleAddPostClick,
-    handleFormClose,
-    handleErrorPopupClose,
+    toggleFormVisibility,
+    closeErrorPopup,
+  };
+};
+
+// Custom hook for handling the post form state
+export const usePostForm = () => {
+  const [text, setText] = useState('');
+
+  const resetForm = () => setText('');
+
+  return {
+    text,
+    setText,
+    resetForm,
   };
 };
