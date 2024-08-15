@@ -14,6 +14,8 @@ const Posts = () => {
     handleAddPostClick,
     handleFormClose,
     handleErrorPopupClose,
+    setPosts,  // Ensure that setPosts is correctly destructured
+    setShowForm,  // Ensure that setShowForm is correctly destructured
   } = usePosts();
 
   const { text, setText, errorMessage, setErrorMessage, resetForm } = usePostForm();
