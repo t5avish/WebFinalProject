@@ -1,32 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useLoginForm } from './Hooks';
 
 const LoginForm = ({ closeModal, onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        onLogin();
-        closeModal();
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      setError('Something went wrong');
-    }
-  };
+  const { email, setEmail, password, setPassword, error, handleSubmit } = useLoginForm({ onLogin, closeModal });
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-10 dark:bg-opacity-70">

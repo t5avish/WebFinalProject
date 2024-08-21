@@ -1,54 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSignUpForm } from './Hooks';
 
 const SignUpForm = ({ closeModal }) => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        age: '',
-        weight: '',
-        height: '',
-        gender: ''
-    });
-
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState(false);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch('/api/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                setSuccessMessage(true);
-                setErrorMessage('');
-            } else {
-                setErrorMessage(result.message || 'An error occurred. Please try again later.');
-                setSuccessMessage(false);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setErrorMessage('An error occurred. Please try again later.');
-            setSuccessMessage(false);
-        }
-    };
+    const {
+        formData, handleChange,
+        errorMessage, successMessage,
+        handleSubmit
+    } = useSignUpForm({ closeModal });
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-10 dark:bg-opacity-70">
