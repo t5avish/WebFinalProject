@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; // Import useState
-import { useUserProfile, useFetchUser, useHandleAvatarSelect, useHandleViewChallenge } from './hooks';
+import { useUserProfile, useFetchUser, useHandleAvatarSelect, useHandleViewChallenge } from './Hooks';
 import UserDetails from './UserDetails';
 import ChallengesList from './ChallengesList';
 import ChallengeDetails from './ChallengeDetails';
