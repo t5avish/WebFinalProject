@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+// Custom hook to manage profile data and state
 export const useUserProfile = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -24,7 +25,10 @@ export const useUserProfile = () => {
     };
 };
 
-export const useFetchUser = (setUser, setLoading, setError, setSelectedAvatar, setAge, setWeight, setHeight) => {
+// Custom hook to fetch user profile data
+export const useFetchUser = ({
+    setUser, setLoading, setError, setSelectedAvatar, setAge, setWeight, setHeight
+}) => {
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('token');
@@ -46,7 +50,6 @@ export const useFetchUser = (setUser, setLoading, setError, setSelectedAvatar, s
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error('Error fetching user data:', errorData.message);
                     throw new Error(errorData.message || 'Failed to fetch user data');
                 }
                 const data = await response.json();
@@ -66,7 +69,8 @@ export const useFetchUser = (setUser, setLoading, setError, setSelectedAvatar, s
     }, [setUser, setLoading, setError, setSelectedAvatar, setAge, setWeight, setHeight]);
 };
 
-export const useHandleAvatarSelect = (setSelectedAvatar, setIsAvatarSelectorOpen, setError) => {
+// Custom hook for avatar selection
+export const useHandleAvatarSelect = ({ setSelectedAvatar, setIsAvatarSelectorOpen, setError }) => {
     const handleAvatarSelect = async (avatar) => {
         setSelectedAvatar(avatar);
         setIsAvatarSelectorOpen(false);
@@ -99,7 +103,14 @@ export const useHandleAvatarSelect = (setSelectedAvatar, setIsAvatarSelectorOpen
     return handleAvatarSelect;
 };
 
-export const useHandleViewChallenge = (user, setSelectedChallenge, setChallengeDetails, setSelectedDate, setSelectedDateValue, setError) => {
+// Custom hook to manage challenges
+export const useHandleChallenge = ({ user, setError }) => {
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
+    const [challengeDetails, setChallengeDetails] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDateValue, setSelectedDateValue] = useState('');
+    const [isNumberInputOpen, setIsNumberInputOpen] = useState(false);
+
     const handleViewChallenge = async (challenge) => {
         setSelectedChallenge(challenge);
 
@@ -117,7 +128,6 @@ export const useHandleViewChallenge = (user, setSelectedChallenge, setChallengeD
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Error fetching challenge details:', errorData.message);
                 throw new Error(errorData.message || 'Failed to fetch challenge details');
             }
 
@@ -130,5 +140,69 @@ export const useHandleViewChallenge = (user, setSelectedChallenge, setChallengeD
         }
     };
 
-    return handleViewChallenge;
+    const handleSave = async () => {
+        if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) <= 0) {
+            window.alert('Value must be a number greater than 0');
+            return;
+        }
+
+        const originalValue = challengeDetails?.days[selectedDate];
+
+        if (Number(selectedDateValue) === originalValue) {
+            window.alert('No changes detected. The value is the same as before.');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('Not authenticated');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/get-challenge-details', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: user.id,
+                    challengeId: selectedChallenge._id,
+                    date: selectedDate,
+                    value: Number(selectedDateValue),
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update value');
+            }
+
+            await handleViewChallenge(selectedChallenge);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setIsNumberInputOpen(false);
+        }
+    };
+
+    const handleButtonClick = (dateKey) => {
+        setSelectedDate(dateKey);
+        const value = challengeDetails?.days[dateKey] ?? '';
+        setSelectedDateValue(value);
+        setIsNumberInputOpen(true);
+    };
+
+    return {
+        selectedChallenge,
+        challengeDetails,
+        selectedDate,
+        selectedDateValue,
+        isNumberInputOpen,
+        handleViewChallenge,
+        handleSave,
+        handleButtonClick,
+        setSelectedDateValue,
+        setChallengeDetails
+    };
 };
