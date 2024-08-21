@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSignUpForm } from './Hooks';
+import { useSignUpForm } from './HomeHooks';
 
 const SignUpForm = ({ closeModal }) => {
     const {
