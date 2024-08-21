@@ -54,8 +54,6 @@ const ProfilePage = () => {
             const updatedUser = await response.json();
             setUser(updatedUser);
             setEditing(false);
-
-            await fetchUser(); // Updated fetchUser call
         } catch (error) {
             setError(error.message);
         }
