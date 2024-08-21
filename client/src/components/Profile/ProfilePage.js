@@ -1,5 +1,5 @@
-import React from 'react';
-import { useUserProfile, useFetchUser, useHandleAvatarSelect, useHandleViewChallenge } from './Hooks';
+import React, { useState } from 'react'; // Import useState
+import { useUserProfile, useFetchUser, useHandleAvatarSelect, useHandleViewChallenge } from './hooks';
 import UserDetails from './UserDetails';
 import ChallengesList from './ChallengesList';
 import ChallengeDetails from './ChallengeDetails';
@@ -55,7 +55,7 @@ const ProfilePage = () => {
             setUser(updatedUser);
             setEditing(false);
 
-            await fetchUser();
+            await fetchUser(); // Updated fetchUser call
         } catch (error) {
             setError(error.message);
         }
