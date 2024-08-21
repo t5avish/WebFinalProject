@@ -6,7 +6,7 @@ import {
     useHandleLikePost,
     useHandleFormVisibility,
     useHandleErrorPopup
-} from './Hooks';
+} from './PostsHooks';
 import PostForm from './PostForm';
 import PostList from './PostList';
 import ErrorPopup from './ErrorPopup';

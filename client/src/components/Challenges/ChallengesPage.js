@@ -5,7 +5,7 @@ import {
     useHandleSubmitChallenge,
     useHandleJoinChallenge,
     useHandleFormVisibility
-} from './Hooks';
+} from './ChallengesHooks';
 import ChallengeForm from './ChallengeForm';
 import ChallengeList from './ChallengeList';
 import ChallengesHeader from './ChallengesHeader';
