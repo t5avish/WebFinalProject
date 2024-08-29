@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// Custom hook to manage posts and user state
+/**
+ * Custom hook to manage posts and related state.
+ * Provides state and setters for posts, form visibility, text input, errors, and user data.
+ */
 export const usePostsState = () => {
     const [posts, setPosts] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -21,7 +24,10 @@ export const usePostsState = () => {
     };
 };
 
-// Custom hook to fetch posts and user profile
+/**
+ * Custom hook to fetch posts and user profile data from the server.
+ * Uses useEffect to trigger data fetching when the component mounts.
+ */
 export const useFetchPostsAndUserProfile = ({ setPosts, setErrorMessage, setUser }) => {
     useEffect(() => {
         const fetchPosts = async () => {
@@ -78,7 +84,10 @@ export const useFetchPostsAndUserProfile = ({ setPosts, setErrorMessage, setUser
     }, [setPosts, setErrorMessage, setUser]);
 };
 
-// Custom hook to handle form submission
+/**
+ * Custom hook to handle form submission for adding a new post.
+ * Sends a POST request to add the post and updates the state accordingly.
+ */
 export const useHandleSubmitPost = ({
     user, text, setPosts, posts, setText, setShowForm, setErrorMessage
 }) => {
@@ -122,7 +131,10 @@ export const useHandleSubmitPost = ({
     return handleSubmit;
 };
 
-// Custom hook to handle liking a post
+/**
+ * Custom hook to handle liking a post.
+ * Sends a PUT request to like the post and updates the state accordingly.
+ */
 export const useHandleLikePost = ({ user, setPosts, posts, setLikeError, setShowErrorPopup }) => {
     const handleLikePost = async (postId) => {
         try {
@@ -153,7 +165,10 @@ export const useHandleLikePost = ({ user, setPosts, posts, setLikeError, setShow
     return handleLikePost;
 };
 
-// Custom hook to handle form visibility and resetting form fields
+/**
+ * Custom hook to handle form visibility and resetting form fields.
+ * Provides functions to close the form and reset fields, or open the form.
+ */
 export const useHandleFormVisibility = ({ setShowForm, setText }) => {
     const handleFormClose = () => {
         setShowForm(false);
@@ -167,7 +182,10 @@ export const useHandleFormVisibility = ({ setShowForm, setText }) => {
     return { handleFormClose, handleAddPostClick };
 };
 
-// Custom hook to handle error popup state
+/**
+ * Custom hook to handle error popup visibility and reset error states.
+ * Provides a function to close the error popup and clear error messages.
+ */
 export const useHandleErrorPopup = ({ setShowErrorPopup, setLikeError }) => {
     const handleErrorPopupClose = () => {
         setShowErrorPopup(false);

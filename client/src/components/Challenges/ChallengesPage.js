@@ -10,6 +10,10 @@ import ChallengeForm from './ChallengeForm';
 import ChallengeList from './ChallengeList';
 import ChallengesHeader from './ChallengesHeader';
 
+/**
+ * ChallengesPage component combines all the subcomponents to create the main challenges page.
+ * It handles fetching, displaying, and managing challenges.
+ */
 const ChallengesPage = () => {
     const {
         challenges, setChallenges,

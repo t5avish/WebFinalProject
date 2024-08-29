@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * Displays a list of posts, each showing the user's name, profile picture,
+ * the time it was posted, the post text, and a like button.
+ * It also shows how many people have liked each post.
+ */
 const PostList = ({ posts, handleLikePost }) => {
     return (
         <>

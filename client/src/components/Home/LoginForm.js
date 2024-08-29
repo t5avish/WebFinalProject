@@ -1,6 +1,11 @@
 import React from 'react';
 import { useLoginForm } from './HomeHooks';
 
+/**
+ * LoginForm component.
+ * 
+ * Handles user login by capturing email and password, validating input, and submitting the form.
+ */
 const LoginForm = ({ closeModal, onLogin }) => {
   const { email, setEmail, password, setPassword, error, handleSubmit } = useLoginForm({ onLogin, closeModal });
 

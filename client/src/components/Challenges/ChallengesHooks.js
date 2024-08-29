@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// Custom hook to manage challenge data and form state
+/**
+ * Custom hook to manage challenge data and form state.
+ * Provides state and setters for challenges, form visibility, and form fields.
+ */
 export const useChallenges = () => {
     const [challenges, setChallenges] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -21,7 +24,10 @@ export const useChallenges = () => {
     };
 };
 
-// Custom hook to fetch challenges from the server
+/**
+ * Custom hook to fetch challenges from the server.
+ * Uses useEffect to trigger the fetch when the component mounts.
+ */
 export const useFetchChallenges = ({ setChallenges }) => {
     useEffect(() => {
         const fetchChallenges = async () => {
@@ -44,7 +50,10 @@ export const useFetchChallenges = ({ setChallenges }) => {
     }, [setChallenges]);
 };
 
-// Custom hook to handle form submission for adding a new challenge
+/**
+ * Custom hook to handle form submission for adding a new challenge.
+ * Sends a POST request to add the challenge and updates the state accordingly.
+ */
 export const useHandleSubmitChallenge = ({
     challenges, setChallenges, title, setTitle,
     numDays, setNumDays, measurement, setMeasurement,
@@ -85,7 +94,10 @@ export const useHandleSubmitChallenge = ({
     return handleSubmit;
 };
 
-// Custom hook to handle joining a challenge
+/**
+ * Custom hook to handle joining a challenge.
+ * Sends a PUT request to join the challenge.
+ */
 export const useHandleJoinChallenge = () => {
     const handleJoinChallenge = async (challengeId) => {
         try {
@@ -117,7 +129,10 @@ export const useHandleJoinChallenge = () => {
     return handleJoinChallenge;
 };
 
-// Custom hook to handle form visibility and resetting form fields
+/**
+ * Custom hook to handle form visibility and resetting form fields.
+ * Provides functions to close the form and reset fields, or open the form.
+ */
 export const useHandleFormVisibility = ({ setShowForm, setTitle, setNumDays, setMeasurement, setGoal, setDescription }) => {
     const handleFormClose = () => {
         setShowForm(false);

@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * ChallengeForm component for adding a new challenge.
+ * Handles form input and submission.
+ */
 const ChallengeForm = ({
     title,
     setTitle,
@@ -26,6 +30,7 @@ const ChallengeForm = ({
                 </button>
                 <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Add New Challenge</h3>
                 <form onSubmit={handleSubmit}>
+                    {/* Input for challenge title */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300">Title:</label>
                         <input
@@ -36,6 +41,7 @@ const ChallengeForm = ({
                             required
                         />
                     </div>
+                    {/* Input for number of challenge days */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300">Number of days:</label>
                         <input
@@ -46,6 +52,7 @@ const ChallengeForm = ({
                             required
                         />
                     </div>
+                    {/* Select for type of measurement */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300">Type of measurement:</label>
                         <select
@@ -60,6 +67,7 @@ const ChallengeForm = ({
                             <option value="km">Length (km)</option>
                         </select>
                     </div>
+                    {/* Input for daily goal */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300">Daily goal:</label>
                         <input
@@ -70,6 +78,7 @@ const ChallengeForm = ({
                             required
                         />
                     </div>
+                    {/* Textarea for challenge description */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300">Description:</label>
                         <textarea
@@ -79,6 +88,7 @@ const ChallengeForm = ({
                             required
                         />
                     </div>
+                    {/* Submit button */}
                     <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500">Submit</button>
                 </form>
             </div>

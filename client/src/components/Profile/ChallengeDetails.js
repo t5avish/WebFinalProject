@@ -21,6 +21,11 @@ ChartJS.register(
     Legend
 );
 
+/**
+ * Renders the details of a selected challenge, including a graph
+ * showing daily progress and a set of buttons to update daily values.
+ * Allows users to input new values for specific dates.
+ */
 const ChallengeDetails = ({
     challengeDetails,
     selectedChallenge,

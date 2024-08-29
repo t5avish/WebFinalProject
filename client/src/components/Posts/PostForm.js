@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * Displays a form that allows users to create a new post.
+ * Users can enter text, and submit the form to add their post.
+ * The form also has a close button to hide the form.
+ * If an error occurs (like empty text), it is displayed above the form.
+ */
 const PostForm = ({ text, setText, errorMessage, handleSubmit, handleFormClose }) => {
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center">

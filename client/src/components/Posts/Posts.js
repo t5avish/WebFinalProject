@@ -11,6 +11,12 @@ import PostForm from './PostForm';
 import PostList from './PostList';
 import ErrorPopup from './ErrorPopup';
 
+/**
+ * The main component that manages and displays posts.
+ * It uses several custom hooks to handle state, fetching posts,
+ * submitting new posts, and liking posts. It also manages form visibility
+ * and error popups. Displays the post list, post form, and error popup based on the current state.
+ */
 const Posts = () => {
     const {
         posts, setPosts,

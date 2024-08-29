@@ -1,6 +1,11 @@
 import React from 'react';
 import AvatarSelector from './AvatarSelector';
 
+/**
+ * Renders the user's profile details including name, age, height, weight,
+ * and BMI. Allows the user to edit these details and select a profile avatar.
+ * The form for editing includes options to save or cancel changes.
+ */
 const UserDetails = ({
     user,
     editing,

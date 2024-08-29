@@ -1,6 +1,12 @@
 import React from 'react';
 import { useSignUpForm } from './HomeHooks';
 
+/**
+ * SignUpForm component.
+ * 
+ * Handles the sign-up process by capturing user details, validating input,
+ * and submitting the form.
+ */
 const SignUpForm = ({ closeModal }) => {
     const {
         formData, handleChange,
@@ -21,6 +27,7 @@ const SignUpForm = ({ closeModal }) => {
                 {errorMessage && <div className="mb-4 text-red-500 dark:text-red-300">{errorMessage}</div>}
                 <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Input fields for user information */}
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="firstName" className="block text-gray-700 dark:text-gray-300">First Name</label>

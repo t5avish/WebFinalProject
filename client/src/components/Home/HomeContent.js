@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * HomeContent component.
+ * 
+ * Renders the main content of the home page, including a welcome message and
+ * a button to open the sign-up form.
+ */
 const HomeContent = ({ openSignUpForm }) => {
     return (
         <>
@@ -18,6 +24,7 @@ const HomeContent = ({ openSignUpForm }) => {
                 <div className="flex flex-wrap items-center justify-center">
                     <div className="w-full lg:w-1/2">
                         <ol className="space-y-8">
+                            {/* Step-by-step instructions for using the app */}
                             <li className="flex items-center space-x-4">
                                 <div className="w-12 h-12 bg-blue-500 text-white flex items-center justify-center rounded-full">
                                     <span className="text-2xl">1</span>

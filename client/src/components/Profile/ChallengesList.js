@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Displays a list of challenges the user has joined.
+ * Each challenge includes a title, description, and a button to view more details.
+ */
 const ChallengesList = ({ user, handleViewChallenge }) => {
     return (
         <div className="mt-8">

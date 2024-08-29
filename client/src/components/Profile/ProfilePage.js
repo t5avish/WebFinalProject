@@ -5,6 +5,12 @@ import ChallengesList from './ChallengesList';
 import ChallengeDetails from './ChallengeDetails';
 import 'tailwindcss/tailwind.css';
 
+/**
+ * Main component for the user's profile page.
+ * Handles the display of user details, list of challenges the user has joined,
+ * and details of selected challenges. Utilizes several custom hooks
+ * to manage the state, fetch data, and handle user interactions.
+ */
 const ProfilePage = () => {
     const {
         user, setUser,

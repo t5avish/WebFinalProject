@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Renders a grid of selectable avatars.
+ * When an avatar is clicked, the selected avatar is passed to the parent component.
+ */
 const AvatarSelector = ({ onSelect }) => {
   const avatars = [
     'avatar1.png',

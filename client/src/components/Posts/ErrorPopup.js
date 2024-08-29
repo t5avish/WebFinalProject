@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Displays a popup to show error messages, particularly for like errors.
+ * The popup has a close button that triggers a function to hide it.
+ */
 const ErrorPopup = ({ likeError, handleErrorPopupClose }) => {
     return (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-70 flex justify-center items-center z-50">

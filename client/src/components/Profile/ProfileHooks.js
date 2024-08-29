@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
-// Custom hook to manage profile data and state
+/**
+ * Custom hook to manage profile data and related state.
+ * Provides state and setters for user profile, avatar selection, editing mode, and other profile-related fields.
+ */
 export const useUserProfile = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,7 +28,10 @@ export const useUserProfile = () => {
     };
 };
 
-// Custom hook to fetch user profile data
+/**
+ * Custom hook to fetch user profile data from the server.
+ * Uses useEffect to trigger the fetch when the component mounts.
+ */
 export const useFetchUser = ({
     setUser, setLoading, setError, setSelectedAvatar, setAge, setWeight, setHeight
 }) => {
@@ -69,7 +75,10 @@ export const useFetchUser = ({
     }, [setUser, setLoading, setError, setSelectedAvatar, setAge, setWeight, setHeight]);
 };
 
-// Custom hook for avatar selection
+/**
+ * Custom hook for avatar selection.
+ * Sends the selected avatar to the server and updates the avatar in the user profile.
+ */
 export const useHandleAvatarSelect = ({ setSelectedAvatar, setIsAvatarSelectorOpen, setError }) => {
     const handleAvatarSelect = async (avatar) => {
         setSelectedAvatar(avatar);
@@ -103,7 +112,10 @@ export const useHandleAvatarSelect = ({ setSelectedAvatar, setIsAvatarSelectorOp
     return handleAvatarSelect;
 };
 
-// Custom hook to manage challenges
+/**
+ * Custom hook to manage challenges in the user profile.
+ * Handles viewing challenge details, saving progress, and interacting with challenge-related data.
+ */
 export const useHandleChallenge = ({ user, setError }) => {
     const [selectedChallenge, setSelectedChallenge] = useState(null);
     const [challengeDetails, setChallengeDetails] = useState(null);
@@ -111,6 +123,9 @@ export const useHandleChallenge = ({ user, setError }) => {
     const [selectedDateValue, setSelectedDateValue] = useState('');
     const [isNumberInputOpen, setIsNumberInputOpen] = useState(false);
 
+    /**
+     * Fetches and displays the details of a selected challenge.
+     */
     const handleViewChallenge = async (challenge) => {
         setSelectedChallenge(challenge);
 
@@ -140,6 +155,9 @@ export const useHandleChallenge = ({ user, setError }) => {
         }
     };
 
+    /**
+     * Saves the user's progress on the selected challenge for a specific date.
+     */
     const handleSave = async () => {
         if (selectedDateValue === '' || isNaN(selectedDateValue) || Number(selectedDateValue) <= 0) {
             window.alert('Value must be a number greater than 0');
@@ -186,6 +204,9 @@ export const useHandleChallenge = ({ user, setError }) => {
         }
     };
 
+    /**
+     * Handles the selection of a specific date within the challenge and prepares the input field for progress updates.
+     */
     const handleButtonClick = (dateKey) => {
         setSelectedDate(dateKey);
         const value = challengeDetails?.days[dateKey] ?? '';
