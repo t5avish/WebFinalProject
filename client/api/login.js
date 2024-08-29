@@ -4,6 +4,14 @@ import cors from '../lib/cors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+/**
+ * API route to handle user login.
+ * 
+ * This route accepts POST requests with user credentials (email and password).
+ * It validates the credentials against the database, and if successful, 
+ * returns a JWT token for authentication. The token is signed with a secret key.
+ */
+
 export default async function handler(req, res) {
   await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
   if (req.method !== 'POST') {

@@ -5,6 +5,15 @@ import cors from '../lib/cors';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+/**
+ * API route to handle user profile operations.
+ * 
+ * This route handles GET, POST, and PUT requests:
+ * - GET: Retrieves the user's profile, including BMI calculation and challenge details.
+ * - POST: Updates the user's avatar.
+ * - PUT: Updates the user's profile information, including age, weight, and height.
+ */
+
 export default async function handler(req, res) {
   await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
 

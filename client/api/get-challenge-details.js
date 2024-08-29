@@ -2,6 +2,14 @@ import {ObjectId } from 'mongodb';
 import { connectToDatabase } from '../lib/mongodb';
 import cors from '../lib/cors';
 
+/**
+ * API route to handle fetching and updating challenge details for a user.
+ * 
+ * This route handles both POST and PUT requests:
+ * - POST: Fetches the challenge details for a specific user and challenge.
+ * - PUT: Updates the progress of a challenge for a specific user on a given date.
+ */
+
 export default async function handler(req, res) {
     await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
     if (req.method === 'POST') {

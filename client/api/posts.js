@@ -2,6 +2,15 @@ import { connectToDatabase } from '../lib/mongodb';
 import { ObjectId } from 'mongodb';
 import cors from '../lib/cors';
 
+/**
+ * API route to handle operations related to posts.
+ * 
+ * This route handles GET, POST, and PUT requests:
+ * - GET: Retrieves all posts sorted by date.
+ * - POST: Creates a new post with user data and text content.
+ * - PUT: Adds a like to a specific post from a user.
+ */
+
 export default async function handler(req, res) {
   await new Promise((resolve, reject) => cors(req, res, (result) => (result instanceof Error ? reject(result) : resolve())));
 

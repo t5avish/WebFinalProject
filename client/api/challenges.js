@@ -3,6 +3,15 @@ import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import cors from '../lib/cors';
 
+/**
+ * API route to handle operations related to challenges.
+ * 
+ * This route handles GET, POST, and PUT requests:
+ * - GET: Retrieves all challenges.
+ * - POST: Creates a new challenge with details such as title, description, and goals.
+ * - PUT: Allows a user to join a challenge, creating a tracking entry in the database.
+ */
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
