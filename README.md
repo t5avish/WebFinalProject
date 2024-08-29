@@ -13,6 +13,8 @@ Join FitnessApp today and achieve your fitness goals with the support of an acti
 
 **Tailwind CSS** - framework that provides low-level utility classes to help style web applications. It allows for highly customizable designs without the need to write custom CSS, making it easy to build responsive and consistent interfaces.
 
+**Chart.js** - library for creating interactive and visually appealing charts and graphs on web pages.
+
 ### **Backend**:
 
 **Next.js** - framework that enables server-side rendering and static site generation. It offers features like automatic routing and API routes.
@@ -20,5 +22,7 @@ Join FitnessApp today and achieve your fitness goals with the support of an acti
 **MongoDB** - database that stores data in flexible, JSON-like documents, making it ideal for handling large volumes of unstructured data.
 
 **JWT** – (JSON Web Token) is a compact, URL-safe token used to securely transmit information between parties as a JSON object. It is commonly used for authentication and authorization in web application.
+
+**CORS** - used in web development to manage and allow requests from different origins, enabling secure data exchange between servers and clients hosted on different domains.
 
 **Vercel** - platform that enables developers to deploy, manage, and scale modern web applications with ease. It offers seamless integration with popular frameworks like Next.js, providing automated deployments and serverless functions
