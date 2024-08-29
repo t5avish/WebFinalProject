@@ -1,11 +1,20 @@
 import { useState } from 'react';
 
-// Custom hook to manage login form state and submission
+/**
+ * Custom hook to manage login form state and submission.
+ * Handles input fields for email and password, and manages form submission.
+ */
 export const useLoginForm = ({ onLogin, closeModal }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    /**
+     * Handles the submission of the login form.
+     * Sends login credentials to the server and processes the response.
+     * If login is successful, stores the token, triggers the onLogin callback, and closes the modal.
+     * If login fails, sets an error message.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -36,7 +45,10 @@ export const useLoginForm = ({ onLogin, closeModal }) => {
     };
 };
 
-// Custom hook to manage sign-up form state and submission
+/**
+ * Custom hook to manage sign-up form state and submission.
+ * Handles input fields for user details, and manages form submission.
+ */
 export const useSignUpForm = ({ closeModal }) => {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -52,6 +64,10 @@ export const useSignUpForm = ({ closeModal }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState(false);
 
+    /**
+     * Handles changes to input fields in the sign-up form.
+     * Updates the corresponding state for each input field.
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -60,6 +76,12 @@ export const useSignUpForm = ({ closeModal }) => {
         });
     };
 
+    /**
+     * Handles the submission of the sign-up form.
+     * Sends user data to the server and processes the response.
+     * If sign-up is successful, displays a success message.
+     * If sign-up fails, sets an error message.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
