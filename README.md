@@ -1,5 +1,5 @@
 <h1 align="center">Fitness App</h1>
-<p align="center"><img src="https://github.com/user-attachments/assets/86564705-f14d-4862-9625-a558a71a2fd8" /></p>
+<p align="center"><img src="https://github.com/user-attachments/assets/6acf022a-00d7-40cc-b4d4-ee3d8abeb7aa" /></p>
 
 Welcome to FitnessApp, the ultimate hub for your fitness journey!
 Our platform empowers registered users to seamlessly join a diverse range of fitness challenges, effortlessly track their progress, and even create personalized challenges tailored to their fitness levels.
